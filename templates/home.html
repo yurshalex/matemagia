@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=1280">
+  <title>Добро пожаловать · МатеМагия</title>
+  <!-- Django-шаблон: home.html -->
+  <link rel="icon" href="../static/img/logo_small.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../static/css/main.css">
+</head>
+<body>
+  <div class="sky" aria-hidden="true"></div>
+
+  <header class="main-navbar">
+    <a class="navbar-logo" href="home.html" aria-label="МатеМагия — на главную">
+      <img src="../static/img/logo_small.png" alt="" width="52" height="52">
+    </a>
+    <span></span>
+    <div class="navbar-end">
+      <a class="btn btn-outline btn-sm" href="users/auth_login.html">Войти</a>
+      <a class="btn btn-primary btn-sm" href="users/register.html">Регистрация</a>
+    </div>
+  </header>
+
+  <main class="page">
+    <section class="welcome-banner">
+      <div class="welcome-text">
+        <span class="badge-pill" data-reveal>✦ Школа магии чисел · 5 класс</span>
+        <h1 class="hero-title" data-reveal>Добро пожаловать в <span class="text-gold">МатеМагию</span>!</h1>
+        <p class="hero-lead" data-reveal>Решай задания, открывай книги заклинаний и стань настоящим магом математики.</p>
+        <div class="hero-actions" data-reveal>
+          <a class="btn btn-primary btn-lg" href="users/register.html">Начать обучение</a>
+          <a class="btn btn-outline btn-lg" href="users/auth_login.html">У меня есть аккаунт</a>
+        </div>
+      </div>
+      <div class="logo-orbit">
+        <span class="sparkle s1" aria-hidden="true">✦</span>
+        <span class="sparkle teal s2" aria-hidden="true">✦</span>
+        <span class="sparkle s3" aria-hidden="true">✦</span>
+        <div class="orbit-ring orbit-dots" aria-hidden="true"></div>
+        <div class="orbit-ring orbit-dash" aria-hidden="true"></div>
+        <div class="orbit-glow" aria-hidden="true"></div>
+        <img class="app-logo" src="../static/img/logo.png" alt="МатеМагия" width="320" height="316">
+      </div>
+    </section>
+
+    <section class="features" aria-label="Что есть в МатеМагии">
+      <article class="card card-pad feature-card" data-reveal>
+        <div class="hex" aria-hidden="true">½</div>
+        <div><h2>Книги заклинаний</h2><p>Все темы 5 класса с теорией</p></div>
+      </article>
+      <article class="card card-pad feature-card" data-reveal>
+        <img src="../static/img/owl.svg" alt="" width="48" height="48">
+        <div><h2>Мудрая сова</h2><p>Подсказки и разбор ошибок</p></div>
+      </article>
+      <article class="card card-pad feature-card" data-reveal>
+        <div class="hex hex-gold" aria-hidden="true">★</div>
+        <div><h2>Путь мага</h2><p>Опыт, ранги и награды</p></div>
+      </article>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+  <script src="../static/js/nav.js" defer></script>
+</body>
+</html>

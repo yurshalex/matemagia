@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=1280">
+  <title>Личный кабинет · МатеМагия</title>
+  <!-- Django-шаблон: progress/profile_stats.html -->
+  <link rel="icon" href="../../static/img/logo_small.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../static/css/main.css">
+</head>
+<body>
+  <div class="sky" aria-hidden="true"></div>
+
+  <header class="main-navbar">
+    <a class="navbar-logo" href="../dashboard_main.html" aria-label="МатеМагия — на главную">
+      <img src="../../static/img/logo_small.png" alt="" width="52" height="52">
+    </a>
+    <nav class="nav-links" id="nav-links" aria-label="Главное меню">
+      <a href="../dashboard_main.html">Главная</a>
+      <a href="../learning/topic_catalog.html">Темы</a>
+      <a href="../tests/task_trainer.html">Тренажёр</a>
+      <a href="../game/challenge_game.html">Испытание</a>
+      <a href="../game/achievements_list.html">Достижения</a>
+    </nav>
+    <div class="navbar-end">
+      <div class="user-profile-widget">
+        <button class="user-profile-btn" type="button" aria-expanded="false" aria-controls="user-menu">
+          <span class="avatar" data-user-initial>А</span>
+          <span class="user-meta"><strong data-user-name>Алиса</strong><small data-user-grade>5 класс</small></span>
+        </button>
+        <div class="user-menu" id="user-menu" hidden>
+          <a href="profile_stats.html">Личный кабинет</a>
+          <!-- Бэкенд: POST-форма на /logout/ с {% csrf_token %} -->
+          <a href="../home.html" id="btn-logout">Выйти</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="page">
+    <!-- Данные: user.first_name, user.grade, user.current_rank, user.current_xp -->
+    <section class="card user-profile-card" data-reveal>
+      <div class="big-avatar"><span class="avatar" data-user-initial>А</span><span class="hat" aria-hidden="true">✦</span></div>
+      <div>
+        <h1 data-user-name>Алиса</h1>
+        <p class="grade" data-user-grade>5 класс</p>
+        <div class="profile-rank"><div class="hex hex-gold hex-sm" aria-hidden="true">★</div><span class="rank-name">Янтарный маг</span><small>120 / 300</small></div>
+        <div class="progress-bar"><span style="width: 40%"></span></div>
+      </div>
+      <a class="btn btn-outline" id="btn-ranks-achievements" href="../game/achievements_list.html">Ранги и достижения</a>
+    </section>
+
+    <!-- Цвет счёта попытки: < 50 % — score-badge-bad, 50–80 % — score-badge-mid, > 80 % — score-badge-success -->
+    <!-- Данные: ProgressService — итоги по progress_userprogress и progress_solutionattempt -->
+    <section class="stats-grid" aria-label="Сводные показатели">
+      <article class="card stat-card" data-reveal><small>Решено заданий</small><strong data-count="86">86</strong></article>
+      <article class="card stat-card" data-reveal><small>Процент верных</small><strong data-count="78" data-suffix="%">78%</strong></article>
+      <article class="card stat-card" data-reveal><small>Время обучения</small><strong data-count="12" data-suffix=" ч">12 ч</strong></article>
+      <article class="card stat-card" data-reveal><small>Пройдено испытаний</small><strong data-count="4">4</strong></article>
+    </section>
+
+    <section class="profile-grid">
+      <div class="profile-col">
+        <!-- Данные: слабые темы (< 60 % верных, ≥ 3 попыток), по возрастанию процента -->
+        <article class="card card-pad weak-spots-section" data-reveal>
+          <div class="widget-head">
+            <div><h2>Слабые места</h2><p>Меньше 60% верных — начни с них</p></div>
+            <a class="link-gold" id="link-fix-weak-spots" href="../learning/topic_catalog.html">Перейти к темам →</a>
+          </div>
+          <ul class="bar-list">
+            <li><span>Дроби</span><div class="progress-bar" data-percent="38"></div><span class="bar-value">38% верно</span></li>
+            <li><span>Текстовые задачи</span><div class="progress-bar" data-percent="52"></div><span class="bar-value">52% верно</span></li>
+          </ul>
+        </article>
+
+        <!-- Данные: процент верных по каждой теме (алгоритм расчёта успеваемости) -->
+        <article class="card card-pad topics-progress-section" data-reveal>
+          <div class="widget-head">
+            <div><h2>Успеваемость по темам</h2><p>Процент верных ответов</p></div>
+          </div>
+          <ul class="bar-list">
+          <li><span>Натуральные числа</span><div class="progress-bar" data-percent="92"></div><span class="bar-value">92%</span></li>
+          <li><span>Сложение и вычитание</span><div class="progress-bar" data-percent="85"></div><span class="bar-value">85%</span></li>
+          <li><span>Умножение и деление</span><div class="progress-bar" data-percent="74"></div><span class="bar-value">74%</span></li>
+          <li><span>Дроби</span><div class="progress-bar" data-percent="38"></div><span class="bar-value">38%</span></li>
+          <li class="is-empty"><span>Десятичные дроби</span><div class="progress-bar"></div><span class="bar-value">нет попыток</span></li>
+          <li><span>Текстовые задачи</span><div class="progress-bar" data-percent="52"></div><span class="bar-value">52%</span></li>
+          <li><span>Геометрия</span><div class="progress-bar" data-percent="70"></div><span class="bar-value">70%</span></li>
+          <li class="is-empty"><span>Площади и объёмы</span><div class="progress-bar"></div><span class="bar-value">нет попыток</span></li>
+          </ul>
+        </article>
+      </div>
+
+      <article class="card card-pad recent-attempts-section" data-reveal>
+        <div class="widget-head"><div><h2>Последние попытки</h2><p>Тренировки и испытания</p></div></div>
+        <ul class="attempts">
+          <li><div><b>Дроби · тренажёр</b><small>Сегодня</small></div><span class="score score-badge-mid">7 из 10</span></li>
+          <li><div><b>Испытание · уровень 1</b><small>Вчера</small></div><span class="score score-badge-success">9 из 10</span></li>
+          <li><div><b>Текстовые задачи</b><small>Вчера</small></div><span class="score score-badge-bad">4 из 10</span></li>
+          <li><div><b>Умножение и деление</b><small>2 дня назад</small></div><span class="score score-badge-success">10 из 10</span></li>
+          <li><div><b>Геометрия</b><small>3 дня назад</small></div><span class="score score-badge-mid">7 из 10</span></li>
+        </ul>
+      </article>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+  <script src="../../static/js/nav.js" defer></script>
+</body>
+</html>

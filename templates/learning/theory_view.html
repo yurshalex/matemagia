@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=1280">
+  <title>Дроби · Теория · МатеМагия</title>
+  <!-- Django-шаблон: learning/theory_view.html -->
+  <link rel="icon" href="../../static/img/logo_small.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../static/css/main.css">
+</head>
+<body>
+  <div class="sky" aria-hidden="true"></div>
+
+  <header class="main-navbar">
+    <a class="navbar-logo" href="../dashboard_main.html" aria-label="МатеМагия — на главную">
+      <img src="../../static/img/logo_small.png" alt="" width="52" height="52">
+    </a>
+    <nav class="nav-links" id="nav-links" aria-label="Главное меню">
+      <a href="../dashboard_main.html">Главная</a>
+      <a href="topic_catalog.html" class="is-active" aria-current="page">Темы</a>
+      <a href="../tests/task_trainer.html">Тренажёр</a>
+      <a href="../game/challenge_game.html">Испытание</a>
+      <a href="../game/achievements_list.html">Достижения</a>
+    </nav>
+    <div class="navbar-end">
+      <div class="user-profile-widget">
+        <button class="user-profile-btn" type="button" aria-expanded="false" aria-controls="user-menu">
+          <span class="avatar" data-user-initial>А</span>
+          <span class="user-meta"><strong data-user-name>Алиса</strong><small data-user-grade>5 класс</small></span>
+        </button>
+        <div class="user-menu" id="user-menu" hidden>
+          <a href="../progress/profile_stats.html">Личный кабинет</a>
+          <!-- Бэкенд: POST-форма на /logout/ с {% csrf_token %} -->
+          <a href="../home.html" id="btn-logout">Выйти</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="page theory-layout">
+    <aside class="course-sidebar-wrap" data-reveal>
+      <a class="back-link" id="link-back-topics" href="topic_catalog.html">← Назад к книгам</a>
+      <nav class="card course-sidebar" aria-label="Уроки темы">
+        <h2>Дроби</h2>
+        <div class="progress-bar progress-sm"><span id="lesson-progress-fill" style="width: 20%"></span></div>
+        <p class="progress-hint" id="lesson-counter">Урок 1 из 5</p>
+        <ul class="lesson-nav">
+          <li><button class="sidebar-lesson-item is-active" type="button" data-lesson="1">1. Что такое дробь</button></li>
+          <li><button class="sidebar-lesson-item" type="button" data-lesson="2">2. Правильные и неправильные</button></li>
+          <li><button class="sidebar-lesson-item" type="button" data-lesson="3">3. Сравнение дробей</button></li>
+          <li><button class="sidebar-lesson-item" type="button" data-lesson="4">4. Сложение дробей</button></li>
+          <li><button class="sidebar-lesson-item" type="button" data-lesson="5">5. Вычитание дробей</button></li>
+          <li><hr></li>
+          <li><a class="sidebar-lesson-item" href="../tests/task_trainer.html">Тренажёр</a></li>
+          <li><a class="sidebar-lesson-item" href="../game/challenge_game.html">Испытание по теме</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Данные: уроки из learning_lesson (title, content, example, remember) -->
+    <article class="paper theory-card" data-reveal>
+      <section class="theory-content" data-lesson-panel="1">
+        <p class="lesson-header">Урок 1 · Заклинание знаний</p>
+        <h1>Что такое дробь?</h1>
+        <p>Дробь показывает, какую часть от целого мы берём.</p>
+        <div class="fraction-demo">
+          <span class="frac"><span>3</span><span>4</span></span>
+          <dl>
+            <dt>Числитель — 3</dt><dd>сколько частей взяли</dd>
+            <dt class="orange">Знаменатель — 4</dt><dd>на сколько равных частей разделили целое</dd>
+          </dl>
+          <div class="pie">
+            <div class="pie-row"><i style="--n:0"></i><i style="--n:1"></i><i style="--n:2"></i><i class="empty" style="--n:3"></i></div>
+            Закрашены 3 части из 4
+          </div>
+        </div>
+        <h3>Пример</h3>
+        <p>Пирог разрезали на 8 равных частей, Алиса съела 3. Она съела <span class="frac"><span>3</span><span>8</span></span> пирога.</p>
+        <div class="remember"><h3>Запомни!</h3><p>Знаменатель — на сколько частей разделили, числитель — сколько взяли.</p></div>
+      </section>
+
+      <section class="theory-content" data-lesson-panel="2" hidden>
+        <p class="lesson-header">Урок 2 · Заклинание порядка</p>
+        <h1>Правильные и неправильные дроби</h1>
+        <p>Если числитель меньше знаменателя, дробь <b>правильная</b>: <span class="frac"><span>2</span><span>5</span></span> — она меньше единицы.</p>
+        <p>Если числитель больше знаменателя или равен ему, дробь <b>неправильная</b>: <span class="frac"><span>7</span><span>4</span></span>, <span class="frac"><span>5</span><span>5</span></span> — она не меньше единицы.</p>
+        <div class="remember"><h3>Запомни!</h3><p>Правильная дробь всегда меньше 1.</p></div>
+      </section>
+
+      <section class="theory-content" data-lesson-panel="3" hidden>
+        <p class="lesson-header">Урок 3 · Заклинание весов</p>
+        <h1>Сравнение дробей</h1>
+        <p>С одинаковыми знаменателями больше та дробь, у которой больше числитель: <span class="frac"><span>5</span><span>9</span></span> &gt; <span class="frac"><span>2</span><span>9</span></span>.</p>
+        <p>С одинаковыми числителями больше та, у которой знаменатель меньше: <span class="frac"><span>1</span><span>3</span></span> &gt; <span class="frac"><span>1</span><span>6</span></span>.</p>
+        <div class="remember"><h3>Запомни!</h3><p>Чем на большее число частей делим целое, тем меньше каждая часть.</p></div>
+      </section>
+
+      <section class="theory-content" data-lesson-panel="4" hidden>
+        <p class="lesson-header">Урок 4 · Заклинание соединения</p>
+        <h1>Сложение дробей</h1>
+        <p>При одинаковых знаменателях складываем числители, знаменатель оставляем: <span class="frac"><span>2</span><span>7</span></span> + <span class="frac"><span>3</span><span>7</span></span> = <span class="frac"><span>5</span><span>7</span></span>.</p>
+        <p>Если знаменатели разные, сначала приводим дроби к общему знаменателю: <span class="frac"><span>1</span><span>4</span></span> = <span class="frac"><span>2</span><span>8</span></span>.</p>
+        <div class="remember"><h3>Запомни!</h3><p>Знаменатели между собой не складывают.</p></div>
+      </section>
+
+      <section class="theory-content" data-lesson-panel="5" hidden>
+        <p class="lesson-header">Урок 5 · Заклинание разделения</p>
+        <h1>Вычитание дробей</h1>
+        <p>Вычитаем числители, знаменатель оставляем: <span class="frac"><span>7</span><span>9</span></span> − <span class="frac"><span>4</span><span>9</span></span> = <span class="frac"><span>3</span><span>9</span></span>.</p>
+        <p>Из единицы: представь 1 как дробь с тем же знаменателем — 1 = <span class="frac"><span>10</span><span>10</span></span>.</p>
+        <div class="remember"><h3>Запомни!</h3><p>Ответ всегда проверяй: можно ли сократить дробь?</p></div>
+      </section>
+
+      <div class="theory-actions">
+        <button class="btn btn-light" id="btn-next-lesson" type="button">Следующий урок</button>
+        <a class="btn btn-violet" id="btn-go-to-tasks" href="../tests/task_trainer.html">Перейти к заданиям</a>
+      </div>
+    </article>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+  <script src="../../static/js/nav.js" defer></script>
+  <script src="../../static/js/theory.js" defer></script>
+</body>
+</html>

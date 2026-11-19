@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=1280">
+  <title>Ранги и достижения · МатеМагия</title>
+  <!-- Django-шаблон: game/achievements_list.html -->
+  <link rel="icon" href="../../static/img/logo_small.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../static/css/main.css">
+</head>
+<body>
+  <div class="sky" aria-hidden="true"></div>
+
+  <header class="main-navbar">
+    <a class="navbar-logo" href="../dashboard_main.html" aria-label="МатеМагия — на главную">
+      <img src="../../static/img/logo_small.png" alt="" width="52" height="52">
+    </a>
+    <nav class="nav-links" id="nav-links" aria-label="Главное меню">
+      <a href="../dashboard_main.html">Главная</a>
+      <a href="../learning/topic_catalog.html">Темы</a>
+      <a href="../tests/task_trainer.html">Тренажёр</a>
+      <a href="challenge_game.html">Испытание</a>
+      <a href="achievements_list.html" class="is-active" aria-current="page">Достижения</a>
+    </nav>
+    <div class="navbar-end">
+      <div class="user-profile-widget">
+        <button class="user-profile-btn" type="button" aria-expanded="false" aria-controls="user-menu">
+          <span class="avatar" data-user-initial>А</span>
+          <span class="user-meta"><strong data-user-name>Алиса</strong><small data-user-grade>5 класс</small></span>
+        </button>
+        <div class="user-menu" id="user-menu" hidden>
+          <a href="../progress/profile_stats.html">Личный кабинет</a>
+          <!-- Бэкенд: POST-форма на /logout/ с {% csrf_token %} -->
+          <a href="../home.html" id="btn-logout">Выйти</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="page">
+    <div class="page-head">
+      <div data-reveal>
+        <h1 class="page-title"><span class="spark" aria-hidden="true">✦</span>Ранги и достижения</h1>
+        <p class="page-lead">Решай задания и проходи испытания — копи опыт от Янтарного до Звёздного мага.</p>
+      </div>
+    </div>
+
+    <!-- Данные: RANK_THRESHOLDS + user.current_xp -->
+    <section class="card ranks-roadmap" data-reveal>
+      <h2>Путь мага</h2>
+      <div class="ranks-row">
+        <button class="rank-card is-current" type="button" data-title="Янтарный маг" data-condition="Текущий ранг · 0 опыта" data-status="Открыт" data-icon="★">
+          <span class="hex hex-gold" aria-hidden="true">★</span><strong>Янтарный маг</strong><small>Текущий ранг</small>
+        </button>
+        <button class="rank-card " type="button" data-title="???" data-condition="Скоро" data-status="Закрыт" data-icon="★">
+          <span class="hex" aria-hidden="true">★</span><strong>???</strong><small>Скоро</small>
+        </button>
+        <button class="rank-card " type="button" data-title="???" data-condition="Скоро" data-status="Закрыт" data-icon="★">
+          <span class="hex" aria-hidden="true">★</span><strong>???</strong><small>Скоро</small>
+        </button>
+        <button class="rank-card " type="button" data-title="???" data-condition="Скоро" data-status="Закрыт" data-icon="★">
+          <span class="hex" aria-hidden="true">★</span><strong>???</strong><small>Скоро</small>
+        </button>
+        <button class="rank-card is-top" type="button" data-title="Звёздный маг" data-condition="Высший ранг" data-status="Закрыт" data-icon="★">
+          <span class="hex" aria-hidden="true">★</span><strong>Звёздный маг</strong><small>Высший ранг</small>
+        </button>
+      </div>
+      <div class="progress-label"><span>До следующего ранга</span><span>120 / 300</span></div>
+      <div class="progress-bar"><span class="rank-progress-fill" style="width: 40%"></span></div>
+    </section>
+
+    <!-- Данные: game_achievement + game_userachievement; полученные — unlocked, остальные — locked -->
+    <div class="widget-head" data-reveal>
+      <h2 class="section-title" style="margin:0">Магические награды</h2>
+      <span class="achievements-counter">Получено 3 из 8</span>
+    </div>
+    <section class="achievements-grid">
+      <button class="card achievement-card unlocked" type="button" data-reveal
+              data-title="Первое заклинание" data-condition="Реши первое задание" data-reward="+10 опыта" data-status="Получено" data-icon="★">
+        <span class="hex hex-gold" aria-hidden="true">★</span>
+        <span><strong>Первое заклинание</strong><small>Реши первое задание</small></span>
+      </button>
+      <button class="card achievement-card unlocked" type="button" data-reveal
+              data-title="Десятка" data-condition="Реши 10 заданий" data-reward="+20 опыта" data-status="Получено" data-icon="10">
+        <span class="hex hex-gold" aria-hidden="true">10</span>
+        <span><strong>Десятка</strong><small>Реши 10 заданий</small></span>
+      </button>
+      <button class="card achievement-card unlocked" type="button" data-reveal
+              data-title="Без единой ошибки" data-condition="Пройди испытание без ошибок" data-reward="+30 опыта" data-status="Получено" data-icon="✓">
+        <span class="hex hex-gold" aria-hidden="true">✓</span>
+        <span><strong>Без единой ошибки</strong><small>Пройди испытание без ошибок</small></span>
+      </button>
+      <button class="card achievement-card locked" type="button" data-reveal
+              data-title="Полсотни" data-condition="Реши 50 заданий" data-reward="+40 опыта" data-status="Ещё не получено" data-icon="50">
+        <span class="hex" aria-hidden="true">50</span>
+        <span><strong>Полсотни</strong><small>Реши 50 заданий</small></span>
+      </button>
+      <button class="card achievement-card locked" type="button" data-reveal
+              data-title="Три испытания" data-condition="Пройди «Испытание» три раза" data-reward="+40 опыта" data-status="Ещё не получено" data-icon="3">
+        <span class="hex" aria-hidden="true">3</span>
+        <span><strong>Три испытания</strong><small>Пройди «Испытание» три раза</small></span>
+      </button>
+      <button class="card achievement-card locked" type="button" data-reveal
+              data-title="Неделя практики" data-condition="Занимайся 7 дней подряд" data-reward="+50 опыта" data-status="Ещё не получено" data-icon="7">
+        <span class="hex" aria-hidden="true">7</span>
+        <span><strong>Неделя практики</strong><small>Занимайся 7 дней подряд</small></span>
+      </button>
+      <button class="card achievement-card locked" type="button" data-reveal
+              data-title="Работа над ошибками" data-condition="Исправь ошибку в слабой теме" data-reward="+20 опыта" data-status="Ещё не получено" data-icon="+">
+        <span class="hex" aria-hidden="true">+</span>
+        <span><strong>Работа над ошибками</strong><small>Исправь ошибку в слабой теме</small></span>
+      </button>
+      <button class="card achievement-card locked" type="button" data-reveal
+              data-title="Сотня" data-condition="Реши 100 заданий" data-reward="+100 опыта" data-status="Ещё не получено" data-icon="100">
+        <span class="hex" aria-hidden="true">100</span>
+        <span><strong>Сотня</strong><small>Реши 100 заданий</small></span>
+      </button>
+    </section>
+
+    <dialog class="modal" id="achievement-modal" aria-labelledby="modal-title">
+      <div class="card modal-card">
+        <span class="hex hex-gold" id="modal-icon" aria-hidden="true">★</span>
+        <h2 id="modal-title"></h2>
+        <p id="modal-condition"></p>
+        <span class="status status-progress" id="modal-status"></span>
+        <p class="text-gold" id="modal-reward"></p>
+        <form method="dialog"><button class="btn btn-primary">Понятно</button></form>
+      </div>
+    </dialog>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+  <script src="../../static/js/nav.js" defer></script>
+  <script src="../../static/js/achievements.js" defer></script>
+</body>
+</html>

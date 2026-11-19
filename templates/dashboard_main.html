@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=1280">
+  <title>Главная · МатеМагия</title>
+  <!-- Django-шаблон: dashboard_main.html -->
+  <link rel="icon" href="../static/img/logo_small.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../static/css/main.css">
+</head>
+<body>
+  <div class="sky" aria-hidden="true"></div>
+
+  <header class="main-navbar">
+    <a class="navbar-logo" href="dashboard_main.html" aria-label="МатеМагия — на главную">
+      <img src="../static/img/logo_small.png" alt="" width="52" height="52">
+    </a>
+    <nav class="nav-links" id="nav-links" aria-label="Главное меню">
+      <a href="dashboard_main.html" class="is-active" aria-current="page">Главная</a>
+      <a href="learning/topic_catalog.html">Темы</a>
+      <a href="tests/task_trainer.html">Тренажёр</a>
+      <a href="game/challenge_game.html">Испытание</a>
+      <a href="game/achievements_list.html">Достижения</a>
+    </nav>
+    <div class="navbar-end">
+      <div class="user-profile-widget">
+        <button class="user-profile-btn" type="button" aria-expanded="false" aria-controls="user-menu">
+          <span class="avatar" data-user-initial>А</span>
+          <span class="user-meta"><strong data-user-name>Алиса</strong><small data-user-grade>5 класс</small></span>
+        </button>
+        <div class="user-menu" id="user-menu" hidden>
+          <a href="progress/profile_stats.html">Личный кабинет</a>
+          <!-- Бэкенд: POST-форма на /logout/ с {% csrf_token %} -->
+          <a href="home.html" id="btn-logout">Выйти</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="page">
+    <section class="welcome-banner" id="welcome-banner">
+      <div class="welcome-text">
+        <span class="badge-pill" data-reveal>✦ Школа магии чисел · <span data-user-grade>5 класс</span></span>
+        <h1 class="hero-title" data-reveal>Добро пожаловать в <span class="text-gold">МатеМагию</span>!</h1>
+        <p class="hero-lead" data-reveal>Решай задания, открывай книги заклинаний и стань настоящим магом математики.</p>
+        <div class="hero-actions" data-reveal>
+          <a id="btn-continue-learning" class="btn btn-primary btn-lg" href="learning/theory_view.html#lesson-4">Продолжить обучение</a>
+          <a id="btn-select-topic" class="btn btn-outline btn-lg" href="learning/topic_catalog.html">Выбрать тему</a>
+        </div>
+      </div>
+      <div class="logo-orbit">
+        <span class="sparkle s1" aria-hidden="true">✦</span>
+        <span class="sparkle teal s2" aria-hidden="true">✦</span>
+        <span class="sparkle s3" aria-hidden="true">✦</span>
+        <div class="orbit-ring orbit-dots" aria-hidden="true"></div>
+        <div class="orbit-ring orbit-dash" aria-hidden="true"></div>
+        <div class="orbit-glow" aria-hidden="true"></div>
+        <img class="app-logo" src="../static/img/logo.png" alt="МатеМагия" width="320" height="316">
+      </div>
+    </section>
+
+    <section class="dashboard-grid">
+      <!-- Данные: user.current_rank, user.current_xp, порог следующего ранга -->
+      <article class="card card-pad" id="widget-current-rank" data-reveal>
+        <div class="rank-head">
+          <div class="rank-badge" aria-hidden="true"><div class="hex hex-gold hex-sm">★</div></div>
+          <div>
+            <p class="widget-label">Твой ранг</p>
+            <h2 class="rank-name">Янтарный маг</h2>
+          </div>
+        </div>
+        <div class="progress-label"><span>Магический опыт</span><span>120 / 300</span></div>
+        <div class="progress-bar" id="rank-progress-bar" role="progressbar" aria-label="Опыт до следующего ранга" aria-valuemin="0" aria-valuemax="300" aria-valuenow="120"><span style="width: 40%"></span></div>
+        <p class="progress-hint">Ещё 180 опыта до следующего ранга</p>
+      </article>
+
+      <!-- Данные: незаконченная тренировка. Нет тренировки → заголовок «Начни первую тренировку» и кнопка «Открыть темы» -->
+      <article class="card card-pad card-accent widget-active-lesson" id="widget-active-lesson" data-reveal>
+        <p class="widget-label">Открытая книга заклинаний</p>
+        <h2 class="lesson-title">Дроби · Сложение дробей</h2>
+        <div class="lesson-progress">
+          <span>Задание 3 из 10</span>
+          <div class="progress-bar progress-bar-light" role="progressbar" aria-label="Прогресс тренировки" aria-valuemin="0" aria-valuemax="10" aria-valuenow="3"><span style="width: 30%"></span></div>
+        </div>
+        <a id="btn-continue-workout" class="btn btn-primary" href="tests/task_trainer.html?task=3">Продолжить тренировку</a>
+      </article>
+
+      <!-- Данные: слабые темы (< 60 % верных, ≥ 3 попыток), data-percent = процент верных. Пусто → <p class="empty-state">Слабых мест нет</p> -->
+      <article class="card card-pad wide" id="widget-weak-spots" data-reveal>
+        <div class="widget-head">
+          <h2>Слабые места</h2>
+          <a id="link-full-stats" class="link-gold" href="progress/profile_stats.html">Вся статистика</a>
+        </div>
+        <ul class="bar-list">
+          <li><span>Дроби</span><div class="progress-bar" data-percent="38"></div><span class="bar-value">38%</span></li>
+          <li><span>Текстовые задачи</span><div class="progress-bar" data-percent="52"></div><span class="bar-value">52%</span></li>
+        </ul>
+      </article>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+  <script src="../static/js/nav.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=1280">
+  <title>Испытание · МатеМагия</title>
+  <!-- Django-шаблон: game/challenge_game.html -->
+  <link rel="icon" href="../../static/img/logo_small.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../static/css/main.css">
+</head>
+<body>
+  <div class="sky" aria-hidden="true"></div>
+
+  <header class="main-navbar">
+    <a class="navbar-logo" href="../dashboard_main.html" aria-label="МатеМагия — на главную">
+      <img src="../../static/img/logo_small.png" alt="" width="52" height="52">
+    </a>
+    <nav class="nav-links" id="nav-links" aria-label="Главное меню">
+      <a href="../dashboard_main.html">Главная</a>
+      <a href="../learning/topic_catalog.html">Темы</a>
+      <a href="../tests/task_trainer.html">Тренажёр</a>
+      <a href="challenge_game.html" class="is-active" aria-current="page">Испытание</a>
+      <a href="achievements_list.html">Достижения</a>
+    </nav>
+    <div class="navbar-end">
+      <div class="user-profile-widget">
+        <button class="user-profile-btn" type="button" aria-expanded="false" aria-controls="user-menu">
+          <span class="avatar" data-user-initial>А</span>
+          <span class="user-meta"><strong data-user-name>Алиса</strong><small data-user-grade>5 класс</small></span>
+        </button>
+        <div class="user-menu" id="user-menu" hidden>
+          <a href="../progress/profile_stats.html">Личный кабинет</a>
+          <!-- Бэкенд: POST-форма на /logout/ с {% csrf_token %} -->
+          <a href="../home.html" id="btn-logout">Выйти</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="page">
+    <div class="challenge-head">
+      <div data-reveal>
+        <h1 class="page-title text-gold">Испытание</h1>
+        <p class="page-lead">Пройди серию заданий без подсказок и получи награду.</p>
+      </div>
+      <!-- Данные: user.current_rank, user.current_xp -->
+      <article class="card challenge-rank-card" data-reveal>
+        <div class="rank-head">
+          <div class="hex hex-gold hex-sm" aria-hidden="true">★</div>
+          <div><p class="widget-label">Текущий ранг</p><h2 class="rank-name">Янтарный маг</h2></div>
+        </div>
+        <div class="progress-bar progress-sm"><span style="width: 40%"></span></div>
+        <p class="progress-hint">120 / 300 опыта</p>
+      </article>
+    </div>
+
+    <img class="castle" src="../../static/img/castle.svg" alt="" width="230" height="192" data-reveal>
+
+    <!-- Данные: пройденные уровни ученика; is-open — доступен, is-passed — пройден -->
+    <ol class="challenge-map" id="challenge-map" aria-label="Уровни испытания" data-reveal>
+      <li><button class="challenge-node-level is-open is-selected" type="button" data-level="1"><span class="node-circle">★</span><strong>Уровень 1</strong><small>Доступен</small></button></li>
+      <li><button class="challenge-node-level" type="button" data-level="2"><span class="node-circle"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span><strong>Уровень 2</strong><small>Закрыт</small></button></li>
+      <li><button class="challenge-node-level" type="button" data-level="3"><span class="node-circle"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span><strong>Уровень 3</strong><small>Закрыт</small></button></li>
+      <li><button class="challenge-node-level" type="button" data-level="4"><span class="node-circle"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span><strong>Уровень 4</strong><small>Закрыт</small></button></li>
+    </ol>
+
+    <!-- Бэкенд: method="post" action="/game/start/" + {% csrf_token %} -->
+    <form class="card challenge-form" id="challenge-form" action="../tests/task_trainer.html" data-reveal>
+      <div class="start-row">
+        <div class="field">
+          <label for="challenge-topic-select">Выбери тему</label>
+          <select name="topic" id="challenge-topic-select">
+            <option>Натуральные числа</option>
+            <option>Сложение и вычитание</option>
+            <option>Умножение и деление</option>
+            <option selected>Дроби</option>
+            <option>Десятичные дроби</option>
+            <option>Текстовые задачи</option>
+            <option>Геометрия</option>
+            <option>Площади и объёмы</option>
+          </select>
+        </div>
+        <input type="hidden" name="level" id="challenge-level" value="1">
+        <button class="btn btn-primary btn-lg" id="btn-start-challenge" type="submit">Начать испытание</button>
+      </div>
+      <div class="challenge-info">
+        <div class="info-block"><small>Задания</small><strong>10 вопросов</strong></div>
+        <div class="info-block"><small>Условие</small><strong>от 60% верных</strong></div>
+        <div class="info-block"><small>Награда</small><strong class="text-gold">+30 опыта</strong></div>
+      </div>
+    </form>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+  <script src="../../static/js/nav.js" defer></script>
+  <script src="../../static/js/challenge.js" defer></script>
+</body>
+</html>
