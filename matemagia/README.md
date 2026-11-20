@@ -4,7 +4,7 @@
 
 
 ## Что реализовано
-- **core:** `ServiceResult` и коды результата (раздел 5.1.2 документа), главная страница `/`
+- **core:** `ServiceResult` и коды результата, главная страница `/`
   (`home.html` для гостя, `dashboard_main.html` для ученика).
 - **users:** модель `User` (класс, опыт, ранг), `AuthService` (`register`, `login`, `logout`), представления
   `/register/`, `/login/`, `/logout/`, `/profile/`.
