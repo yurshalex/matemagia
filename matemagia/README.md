@@ -1,21 +1,7 @@
-# МатеМагия — бэкенд, часть 1 из 3 (Django)
-
+# МатеМагия — бэкенд
 В этой части: настройки проекта (`config`), основа (`core`), пользователи (`users`), темы и теория (`learning`).
 Следующие части (`tests`, `progress`, `game`, `adaptive`) добавляются отдельными папками.
-Фронтенд кладётся в `templates/` и `static/`.
 
-## Запуск
-```bash
-python -m venv venv && source venv/bin/activate   # Windows: venv\Scripts\activate
-pip install -r requirements.txt
-cp .env.example .env                               # Windows: copy .env.example .env
-python manage.py makemigrations users learning
-python manage.py migrate
-python manage.py loaddata initial_data.json        # 8 тем и 26 уроков
-python manage.py createsuperuser
-python manage.py runserver
-```
-Откройте http://127.0.0.1:8000/admin/ — там пользователи, темы и уроки.
 
 ## Что реализовано
 - **core:** `ServiceResult` и коды результата (раздел 5.1.2 документа), главная страница `/`
