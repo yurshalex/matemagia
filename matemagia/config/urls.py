@@ -10,6 +10,6 @@ urlpatterns = [
     path("", include("users.urls")),
     path("", include("learning.urls")),
     path("", include("tests.urls")),     # следующие части проекта
-    # path("", include("progress.urls")),
-    # path("", include("game.urls")),  # вторая половина проекта
+    path("", include("progress.urls")),
+    path("", include("game.urls")),  # вторая половина проекта
 ]
