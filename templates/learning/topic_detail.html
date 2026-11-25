@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#120d33">
+  <title>Дроби · МатеМагия</title>
+  <!-- Django-шаблон: learning/topic_detail.html -->
+  <link rel="icon" href="../../static/img/logo_small.png">
+  <link rel="stylesheet" href="../../static/css/main.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">К содержимому</a>
+  <div class="sky" aria-hidden="true"></div>
+
+  <header class="main-navbar">
+    <a class="navbar-logo" href="../dashboard_main.html" aria-label="МатеМагия — на главную">
+      <img src="../../static/img/logo_small.png" alt="" width="48" height="48">
+      <span class="navbar-title">МатеМагия</span>
+    </a>
+    <nav class="nav-links" id="nav-links" aria-label="Главное меню">
+      <a href="../dashboard_main.html">Главная</a>
+      <a href="topic_catalog.html" class="is-active" aria-current="page">Темы</a>
+      <a href="../tests/task_list.html">Тренажёр</a>
+      <a href="../game/challenge_game.html">Испытание</a>
+      <a href="../game/achievements_list.html">Достижения</a>
+    </nav>
+    <div class="navbar-end">
+      <div class="user-profile-widget">
+        <button class="user-profile-btn" type="button" aria-expanded="false" aria-controls="user-menu">
+          <span class="avatar" data-user-initial>А</span>
+          <span class="user-meta"><strong data-user-name>Алиса</strong><small data-user-grade>5 класс</small></span>
+        </button>
+        <div class="user-menu" id="user-menu" hidden>
+          <a href="../progress/profile_stats.html">Личный кабинет</a>
+          <a href="../progress/progress.html">Статистика</a>
+          <!-- Бэкенд: POST-форма на /logout/ с {% csrf_token %} -->
+          <a href="../home.html" id="btn-logout">Выйти</a>
+        </div>
+      </div>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="Меню">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main id="main" class="page">
+    <a class="back-link" href="topic_catalog.html">← Назад к книгам</a>
+
+    <!-- Данные: learning_topic (title, description, icon) + прогресс ученика по теме -->
+    <section class="card topic-hero" data-reveal>
+      <span class="topic-icon topic-icon-lg" aria-hidden="true">½</span>
+      <div class="topic-hero-body">
+        <div class="topic-hero-head">
+          <h1 class="page-title">Дроби</h1>
+          <span class="status status-progress">В процессе</span>
+        </div>
+        <p class="page-lead">Обыкновенные дроби: что это такое, как их сравнивать, складывать и вычитать.</p>
+        <div class="topic-hero-stats">
+          <div><small>Решено заданий</small><strong>3 из 10</strong></div>
+          <div><small>Верных ответов</small><strong>38%</strong></div>
+          <div><small>Уроков</small><strong>5</strong></div>
+        </div>
+        <div class="progress-bar"><span style="width: 30%"></span></div>
+      </div>
+    </section>
+
+    <div class="topic-detail-grid">
+      <!-- Данные: learning_lesson по теме, по полю order -->
+      <section class="card card-pad" data-reveal>
+        <div class="widget-head"><div><h2>Уроки</h2><p>Прочитай теорию, затем закрепи в тренажёре</p></div></div>
+        <ol class="lesson-list">
+          <li><a href="theory_view.html#lesson-1"><span class="lesson-num is-done">✓</span><span>Что такое дробь</span><span class="lesson-go" aria-hidden="true">→</span></a></li>
+          <li><a href="theory_view.html#lesson-2"><span class="lesson-num is-done">✓</span><span>Правильные и неправильные дроби</span><span class="lesson-go" aria-hidden="true">→</span></a></li>
+          <li><a href="theory_view.html#lesson-3"><span class="lesson-num is-done">✓</span><span>Сравнение дробей</span><span class="lesson-go" aria-hidden="true">→</span></a></li>
+          <li><a href="theory_view.html#lesson-4"><span class="lesson-num is-current">4</span><span>Сложение дробей</span><span class="lesson-go" aria-hidden="true">→</span></a></li>
+          <li><a href="theory_view.html#lesson-5"><span class="lesson-num">5</span><span>Вычитание дробей</span><span class="lesson-go" aria-hidden="true">→</span></a></li>
+        </ol>
+      </section>
+
+      <aside class="topic-actions" data-reveal>
+        <a class="action-card card" href="theory_view.html#lesson-4">
+          <span class="hex hex-gold hex-sm" aria-hidden="true">≡</span>
+          <span><strong>Продолжить чтение</strong><small>Урок 4 · Сложение дробей</small></span>
+        </a>
+        <a class="action-card card" href="../tests/task_trainer.html">
+          <span class="hex hex-sm" aria-hidden="true">✎</span>
+          <span><strong>Тренажёр</strong><small>10 заданий под твой уровень</small></span>
+        </a>
+        <a class="action-card card" href="../game/challenge_game.html">
+          <span class="hex hex-sm" aria-hidden="true">★</span>
+          <span><strong>Испытание</strong><small>Серия без подсказок · +30 опыта</small></span>
+        </a>
+        <div class="owl-tip">
+          <img src="../../static/img/owl.svg" alt="" width="40" height="40">
+          <p>Тема в слабых местах: 38% верных. Повтори урок 4 и реши ещё пару заданий.</p>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+  <script src="../../static/js/nav.js" defer></script>
+</body>
+</html>
