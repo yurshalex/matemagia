@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#120d33">
+  <title>Итоги испытания · МатеМагия</title>
+  <!-- Django-шаблон: game/game_result.html -->
+  <link rel="icon" href="../../static/img/logo_small.png">
+  <link rel="stylesheet" href="../../static/css/main.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">К содержимому</a>
+  <div class="sky" aria-hidden="true"></div>
+
+  <header class="main-navbar">
+    <a class="navbar-logo" href="../dashboard_main.html" aria-label="МатеМагия — на главную">
+      <img src="../../static/img/logo_small.png" alt="" width="48" height="48">
+      <span class="navbar-title">МатеМагия</span>
+    </a>
+    <nav class="nav-links" id="nav-links" aria-label="Главное меню">
+      <a href="../dashboard_main.html">Главная</a>
+      <a href="../learning/topic_catalog.html">Темы</a>
+      <a href="../tests/task_list.html">Тренажёр</a>
+      <a href="challenge_game.html" class="is-active" aria-current="page">Испытание</a>
+      <a href="achievements_list.html">Достижения</a>
+    </nav>
+    <div class="navbar-end">
+      <div class="user-profile-widget">
+        <button class="user-profile-btn" type="button" aria-expanded="false" aria-controls="user-menu">
+          <span class="avatar" data-user-initial>А</span>
+          <span class="user-meta"><strong data-user-name>Алиса</strong><small data-user-grade>5 класс</small></span>
+        </button>
+        <div class="user-menu" id="user-menu" hidden>
+          <a href="../progress/profile_stats.html">Личный кабинет</a>
+          <a href="../progress/progress.html">Статистика</a>
+          <!-- Бэкенд: POST-форма на /logout/ с {% csrf_token %} -->
+          <a href="../home.html" id="btn-logout">Выйти</a>
+        </div>
+      </div>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="Меню">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main id="main" class="page">
+    <!-- Данные: ChallengeService.get_result — тема, уровень, верных из 10, процент, опыт, пройдено ли.
+         В прототипе цифры приходят из тренажёра в адресе: ?correct=7&total=10&xp=100&level=1 -->
+    <section class="paper result-page game-result" id="game-result" data-reveal>
+      <img class="castle castle-sm" src="../../static/img/castle.svg" alt="" width="160" height="134">
+      <h1 id="gr-title">Испытание пройдено!</h1>
+      <p class="result-sub" id="gr-sub">Дроби · уровень 1</p>
+
+      <div class="score-ring" id="gr-ring" style="--p: 70" role="img" aria-label="70% верных ответов">
+        <div><strong id="gr-percent">70%</strong><small id="gr-score">7 из 10</small></div>
+      </div>
+      <div class="result-stars" id="gr-stars" aria-hidden="true"></div>
+
+      <ul class="result-facts">
+        <li><small>Опыт</small><strong class="text-xp" id="gr-xp">+100</strong></li>
+        <li><small>Порог</small><strong>60%</strong></li>
+        <li><small>Награда</small><strong id="gr-unlock">Уровень 2 открыт</strong></li>
+      </ul>
+
+      <div class="hero-actions">
+        <a class="btn btn-violet" id="gr-next" href="challenge_game.html">К следующему уровню</a>
+        <a class="btn btn-light" href="achievements_list.html">Мои достижения</a>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+  <script src="../../static/js/nav.js" defer></script>
+  <script src="../../static/js/game_result.js" defer></script>
+</body>
+</html>

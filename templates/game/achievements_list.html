@@ -2,26 +2,26 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=1280">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#120d33">
   <title>Ранги и достижения · МатеМагия</title>
   <!-- Django-шаблон: game/achievements_list.html -->
   <link rel="icon" href="../../static/img/logo_small.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../../static/css/main.css">
 </head>
 <body>
+  <a class="skip-link" href="#main">К содержимому</a>
   <div class="sky" aria-hidden="true"></div>
 
   <header class="main-navbar">
     <a class="navbar-logo" href="../dashboard_main.html" aria-label="МатеМагия — на главную">
-      <img src="../../static/img/logo_small.png" alt="" width="52" height="52">
+      <img src="../../static/img/logo_small.png" alt="" width="48" height="48">
+      <span class="navbar-title">МатеМагия</span>
     </a>
     <nav class="nav-links" id="nav-links" aria-label="Главное меню">
       <a href="../dashboard_main.html">Главная</a>
       <a href="../learning/topic_catalog.html">Темы</a>
-      <a href="../tests/task_trainer.html">Тренажёр</a>
+      <a href="../tests/task_list.html">Тренажёр</a>
       <a href="challenge_game.html">Испытание</a>
       <a href="achievements_list.html" class="is-active" aria-current="page">Достижения</a>
     </nav>
@@ -33,14 +33,18 @@
         </button>
         <div class="user-menu" id="user-menu" hidden>
           <a href="../progress/profile_stats.html">Личный кабинет</a>
+          <a href="../progress/progress.html">Статистика</a>
           <!-- Бэкенд: POST-форма на /logout/ с {% csrf_token %} -->
           <a href="../home.html" id="btn-logout">Выйти</a>
         </div>
       </div>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="Меню">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </header>
 
-  <main class="page">
+  <main id="main" class="page">
     <div class="page-head">
       <div data-reveal>
         <h1 class="page-title"><span class="spark" aria-hidden="true">✦</span>Ранги и достижения</h1>
@@ -51,24 +55,25 @@
     <!-- Данные: RANK_THRESHOLDS + user.current_xp -->
     <section class="card ranks-roadmap" data-reveal>
       <h2>Путь мага</h2>
+      <!-- Ранги и пороги — RANK_THRESHOLDS в settings.py; is-current — текущий, is-next — следующий, is-locked — ещё закрыт -->
       <div class="ranks-row">
-        <button class="rank-card is-current" type="button" data-title="Янтарный маг" data-condition="Текущий ранг · 0 опыта" data-status="Открыт" data-icon="★">
-          <span class="hex hex-gold" aria-hidden="true">★</span><strong>Янтарный маг</strong><small>Текущий ранг</small>
+        <button class="rank-card rank-amber is-current" type="button" data-title="Янтарный маг" data-condition="Первый ранг каждого ученика" data-status="Открыт" data-icon="1">
+          <span class="crystal" aria-hidden="true"><span class="hex">1</span></span><strong>Янтарный маг</strong><small>Текущий ранг</small>
         </button>
-        <button class="rank-card " type="button" data-title="???" data-condition="Скоро" data-status="Закрыт" data-icon="★">
-          <span class="hex" aria-hidden="true">★</span><strong>???</strong><small>Скоро</small>
+        <button class="rank-card rank-emerald is-next" type="button" data-title="Изумрудный маг" data-condition="Набери 300 опыта" data-status="Закрыт" data-icon="2">
+          <span class="crystal" aria-hidden="true"><span class="hex">2</span></span><strong>Изумрудный маг</strong><small>от 300 опыта</small>
         </button>
-        <button class="rank-card " type="button" data-title="???" data-condition="Скоро" data-status="Закрыт" data-icon="★">
-          <span class="hex" aria-hidden="true">★</span><strong>???</strong><small>Скоро</small>
+        <button class="rank-card rank-sapphire is-locked" type="button" data-title="Сапфировый маг" data-condition="Набери 700 опыта" data-status="Закрыт" data-icon="3">
+          <span class="crystal" aria-hidden="true"><span class="hex">3</span></span><strong>Сапфировый маг</strong><small>от 700 опыта</small>
         </button>
-        <button class="rank-card " type="button" data-title="???" data-condition="Скоро" data-status="Закрыт" data-icon="★">
-          <span class="hex" aria-hidden="true">★</span><strong>???</strong><small>Скоро</small>
+        <button class="rank-card rank-ruby is-locked" type="button" data-title="Рубиновый маг" data-condition="Набери 1200 опыта" data-status="Закрыт" data-icon="4">
+          <span class="crystal" aria-hidden="true"><span class="hex">4</span></span><strong>Рубиновый маг</strong><small>от 1200 опыта</small>
         </button>
-        <button class="rank-card is-top" type="button" data-title="Звёздный маг" data-condition="Высший ранг" data-status="Закрыт" data-icon="★">
-          <span class="hex" aria-hidden="true">★</span><strong>Звёздный маг</strong><small>Высший ранг</small>
+        <button class="rank-card rank-star is-locked is-top" type="button" data-title="Звёздный маг" data-condition="Высший ранг: набери 2000 опыта" data-status="Закрыт" data-icon="5">
+          <span class="crystal" aria-hidden="true"><span class="hex">5</span></span><strong>Звёздный маг</strong><small>от 2000 опыта</small>
         </button>
       </div>
-      <div class="progress-label"><span>До следующего ранга</span><span>120 / 300</span></div>
+      <div class="progress-label"><span>До ранга «Изумрудный маг»</span><span>120 / 300</span></div>
       <div class="progress-bar"><span class="rank-progress-fill" style="width: 40%"></span></div>
     </section>
 
