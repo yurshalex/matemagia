@@ -1,0 +1,90 @@
+[
+  {
+    "model": "game.achievement",
+    "pk": 1,
+    "fields": {
+      "code": "first_task",
+      "title": "Первое заклинание",
+      "description": "Реши первое задание",
+      "icon_code": "star",
+      "xp_reward": 10
+    }
+  },
+  {
+    "model": "game.achievement",
+    "pk": 2,
+    "fields": {
+      "code": "ten_tasks",
+      "title": "Десятка",
+      "description": "Реши 10 заданий",
+      "icon_code": "ten",
+      "xp_reward": 20
+    }
+  },
+  {
+    "model": "game.achievement",
+    "pk": 3,
+    "fields": {
+      "code": "fifty_tasks",
+      "title": "Полсотни",
+      "description": "Реши 50 заданий",
+      "icon_code": "fifty",
+      "xp_reward": 50
+    }
+  },
+  {
+    "model": "game.achievement",
+    "pk": 4,
+    "fields": {
+      "code": "century",
+      "title": "Сотня",
+      "description": "Реши 100 заданий",
+      "icon_code": "hundred",
+      "xp_reward": 100
+    }
+  },
+  {
+    "model": "game.achievement",
+    "pk": 5,
+    "fields": {
+      "code": "no_errors",
+      "title": "Без единой ошибки",
+      "description": "Пройди «Испытание» без ошибок",
+      "icon_code": "check",
+      "xp_reward": 40
+    }
+  },
+  {
+    "model": "game.achievement",
+    "pk": 6,
+    "fields": {
+      "code": "three_challenges",
+      "title": "Три испытания",
+      "description": "Пройди «Испытание» три раза",
+      "icon_code": "three",
+      "xp_reward": 50
+    }
+  },
+  {
+    "model": "game.achievement",
+    "pk": 7,
+    "fields": {
+      "code": "week_streak",
+      "title": "Неделя практики",
+      "description": "Занимайся семь дней подряд",
+      "icon_code": "seven",
+      "xp_reward": 40
+    }
+  },
+  {
+    "model": "game.achievement",
+    "pk": 8,
+    "fields": {
+      "code": "fix_errors",
+      "title": "Работа над ошибками",
+      "description": "Верно реши ранее ошибочное задание",
+      "icon_code": "plus",
+      "xp_reward": 20
+    }
+  }
+]
