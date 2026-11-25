@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#120d33">
+  <title>Статистика · МатеМагия</title>
+  <!-- Django-шаблон: progress/progress.html -->
+  <link rel="icon" href="../../static/img/logo_small.png">
+  <link rel="stylesheet" href="../../static/css/main.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">К содержимому</a>
+  <div class="sky" aria-hidden="true"></div>
+
+  <header class="main-navbar">
+    <a class="navbar-logo" href="../dashboard_main.html" aria-label="МатеМагия — на главную">
+      <img src="../../static/img/logo_small.png" alt="" width="48" height="48">
+      <span class="navbar-title">МатеМагия</span>
+    </a>
+    <nav class="nav-links" id="nav-links" aria-label="Главное меню">
+      <a href="../dashboard_main.html">Главная</a>
+      <a href="../learning/topic_catalog.html">Темы</a>
+      <a href="../tests/task_list.html">Тренажёр</a>
+      <a href="../game/challenge_game.html">Испытание</a>
+      <a href="../game/achievements_list.html">Достижения</a>
+    </nav>
+    <div class="navbar-end">
+      <div class="user-profile-widget">
+        <button class="user-profile-btn" type="button" aria-expanded="false" aria-controls="user-menu">
+          <span class="avatar" data-user-initial>А</span>
+          <span class="user-meta"><strong data-user-name>Алиса</strong><small data-user-grade>5 класс</small></span>
+        </button>
+        <div class="user-menu" id="user-menu" hidden>
+          <a href="profile_stats.html">Личный кабинет</a>
+          <a href="progress.html">Статистика</a>
+          <!-- Бэкенд: POST-форма на /logout/ с {% csrf_token %} -->
+          <a href="../home.html" id="btn-logout">Выйти</a>
+        </div>
+      </div>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="Меню">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main id="main" class="page">
+    <div class="page-head">
+      <div data-reveal>
+        <a class="back-link" href="profile_stats.html">← В личный кабинет</a>
+        <h1 class="page-title"><span class="spark" aria-hidden="true">✦</span>Статистика</h1>
+      </div>
+      <nav class="filter-bar" aria-label="Разделы статистики" data-reveal>
+        <a class="filter-btn is-active" href="progress.html" aria-current="page">Обзор</a>
+        <a class="filter-btn" href="history.html">История</a>
+        <a class="filter-btn" href="weak_topics.html">Работа над ошибками</a>
+      </nav>
+    </div>
+
+    <!-- Данные: ProgressService.get_user_stats -->
+    <section class="stats-grid" aria-label="Сводные показатели">
+      <article class="card stat-card" data-reveal><small>Всего решено</small><strong data-count="86">86</strong></article>
+      <article class="card stat-card" data-reveal><small>Верно</small><strong data-count="67">67</strong></article>
+      <article class="card stat-card" data-reveal><small>Неверно</small><strong data-count="19">19</strong></article>
+      <article class="card stat-card" data-reveal><small>Процент верных</small><strong data-count="78" data-suffix="%">78%</strong></article>
+    </section>
+
+    <div class="progress-grid">
+      <!-- Данные: решено заданий по дням за последнюю неделю -->
+      <article class="card card-pad" data-reveal>
+        <div class="widget-head"><div><h2>Активность за неделю</h2><p>Решено заданий по дням</p></div></div>
+        <div class="week-chart" role="img" aria-label="Решено заданий: пн 8, вт 12, ср 0, чт 15, пт 6, сб 18, вс 10">
+          <div class="week-col"><span class="week-val">8</span><i style="--h: 44%"></i><small>Пн</small></div>
+          <div class="week-col"><span class="week-val">12</span><i style="--h: 67%"></i><small>Вт</small></div>
+          <div class="week-col"><span class="week-val">0</span><i style="--h: 2%"></i><small>Ср</small></div>
+          <div class="week-col"><span class="week-val">15</span><i style="--h: 83%"></i><small>Чт</small></div>
+          <div class="week-col"><span class="week-val">6</span><i style="--h: 33%"></i><small>Пт</small></div>
+          <div class="week-col is-best"><span class="week-val">18</span><i style="--h: 100%"></i><small>Сб</small></div>
+          <div class="week-col"><span class="week-val">10</span><i style="--h: 56%"></i><small>Вс</small></div>
+        </div>
+      </article>
+
+      <!-- Данные: ProgressService.get_topic_progress — процент верных по каждой теме -->
+      <article class="card card-pad" data-reveal>
+        <div class="widget-head"><div><h2>Прогресс по темам</h2><p>Процент верных ответов</p></div></div>
+        <ul class="bar-list">
+          <li><span>Натуральные числа</span><div class="progress-bar" data-percent="92"></div><span class="bar-value">92%</span></li>
+          <li><span>Сложение и вычитание</span><div class="progress-bar" data-percent="85"></div><span class="bar-value">85%</span></li>
+          <li><span>Умножение и деление</span><div class="progress-bar" data-percent="74"></div><span class="bar-value">74%</span></li>
+          <li><span>Дроби</span><div class="progress-bar" data-percent="38"></div><span class="bar-value">38%</span></li>
+          <li class="is-empty"><span>Десятичные дроби</span><div class="progress-bar"></div><span class="bar-value">нет попыток</span></li>
+          <li><span>Текстовые задачи</span><div class="progress-bar" data-percent="52"></div><span class="bar-value">52%</span></li>
+          <li><span>Геометрия</span><div class="progress-bar" data-percent="70"></div><span class="bar-value">70%</span></li>
+          <li class="is-empty"><span>Площади и объёмы</span><div class="progress-bar"></div><span class="bar-value">нет попыток</span></li>
+        </ul>
+      </article>
+    </div>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+  <script src="../../static/js/nav.js" defer></script>
+</body>
+</html>

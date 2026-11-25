@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#120d33">
+  <title>История решений · МатеМагия</title>
+  <!-- Django-шаблон: progress/history.html -->
+  <link rel="icon" href="../../static/img/logo_small.png">
+  <link rel="stylesheet" href="../../static/css/main.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">К содержимому</a>
+  <div class="sky" aria-hidden="true"></div>
+
+  <header class="main-navbar">
+    <a class="navbar-logo" href="../dashboard_main.html" aria-label="МатеМагия — на главную">
+      <img src="../../static/img/logo_small.png" alt="" width="48" height="48">
+      <span class="navbar-title">МатеМагия</span>
+    </a>
+    <nav class="nav-links" id="nav-links" aria-label="Главное меню">
+      <a href="../dashboard_main.html">Главная</a>
+      <a href="../learning/topic_catalog.html">Темы</a>
+      <a href="../tests/task_list.html">Тренажёр</a>
+      <a href="../game/challenge_game.html">Испытание</a>
+      <a href="../game/achievements_list.html">Достижения</a>
+    </nav>
+    <div class="navbar-end">
+      <div class="user-profile-widget">
+        <button class="user-profile-btn" type="button" aria-expanded="false" aria-controls="user-menu">
+          <span class="avatar" data-user-initial>А</span>
+          <span class="user-meta"><strong data-user-name>Алиса</strong><small data-user-grade>5 класс</small></span>
+        </button>
+        <div class="user-menu" id="user-menu" hidden>
+          <a href="profile_stats.html">Личный кабинет</a>
+          <a href="progress.html">Статистика</a>
+          <!-- Бэкенд: POST-форма на /logout/ с {% csrf_token %} -->
+          <a href="../home.html" id="btn-logout">Выйти</a>
+        </div>
+      </div>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="Меню">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main id="main" class="page">
+    <div class="page-head">
+      <div data-reveal>
+        <a class="back-link" href="profile_stats.html">← В личный кабинет</a>
+        <h1 class="page-title"><span class="spark" aria-hidden="true">✦</span>История решений</h1>
+      </div>
+      <nav class="filter-bar" aria-label="Разделы статистики" data-reveal>
+        <a class="filter-btn" href="progress.html">Обзор</a>
+        <a class="filter-btn is-active" href="history.html" aria-current="page">История</a>
+        <a class="filter-btn" href="weak_topics.html">Работа над ошибками</a>
+      </nav>
+    </div>
+
+    <!-- Данные: ProgressService.get_history(user, page) — по 20 записей, новые сверху -->
+    <section class="card table-card" data-reveal>
+      <div class="table-scroll">
+        <table class="history-table">
+          <thead><tr><th>Когда</th><th>Тема</th><th>Задание</th><th>Формат</th><th>Результат</th><th class="num">Опыт</th><th><span class="sr-only">Разбор</span></th></tr></thead>
+          <tbody>
+            <tr><td>Сегодня, 10:42</td><td>Дроби</td><td>3/8 + 1/4</td><td>Выбор ответа</td><td><span class="score score-badge-success">Верно</span></td><td class="num">+10</td><td><a class="link-gold" href="../tests/result.html">Разбор</a></td></tr>
+            <tr><td>Сегодня, 10:40</td><td>Дроби</td><td>Сократи 6/8</td><td>Ввод ответа</td><td><span class="score score-badge-bad">Ошибка</span></td><td class="num">—</td><td><a class="link-gold" href="../tests/result.html">Разбор</a></td></tr>
+            <tr><td>Сегодня, 10:37</td><td>Дроби</td><td>Расставь по возрастанию</td><td>По порядку</td><td><span class="score score-badge-success">Верно</span></td><td class="num">+15</td><td><a class="link-gold" href="../tests/result.html">Разбор</a></td></tr>
+            <tr><td>Вчера, 17:15</td><td>Текстовые задачи</td><td>Задача о поезде</td><td>Ввод ответа</td><td><span class="score score-badge-bad">Ошибка</span></td><td class="num">—</td><td><a class="link-gold" href="../tests/result.html">Разбор</a></td></tr>
+            <tr><td>Вчера, 17:10</td><td>Геометрия</td><td>Виды углов</td><td>Сопоставление</td><td><span class="score score-badge-success">Верно</span></td><td class="num">+15</td><td><a class="link-gold" href="../tests/result.html">Разбор</a></td></tr>
+            <tr><td>Вчера, 17:02</td><td>Испытание · ур. 1</td><td>Дроби, задание 10</td><td>Выбор ответа</td><td><span class="score score-badge-success">Верно</span></td><td class="num">+20</td><td><a class="link-gold" href="../tests/result.html">Разбор</a></td></tr>
+            <tr><td>18 ноября, 16:20</td><td>Умножение и деление</td><td>48 · 25</td><td>Ввод ответа</td><td><span class="score score-badge-success">Верно</span></td><td class="num">+10</td><td><a class="link-gold" href="../tests/result.html">Разбор</a></td></tr>
+            <tr><td>18 ноября, 16:14</td><td>Натуральные числа</td><td>Округли до сотен</td><td>Верно или нет</td><td><span class="score score-badge-success">Верно</span></td><td class="num">+10</td><td><a class="link-gold" href="../tests/result.html">Разбор</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <nav class="pagination" aria-label="Страницы истории">
+        <span class="page-btn is-disabled" aria-hidden="true">←</span>
+        <a class="page-btn is-active" href="history.html" aria-current="page">1</a>
+        <a class="page-btn" href="#" data-soon="В прототипе одна страница истории">2</a>
+        <a class="page-btn" href="#" data-soon="В прототипе одна страница истории">3</a>
+        <a class="page-btn" href="#" data-soon="В прототипе одна страница истории" aria-label="Следующая страница">→</a>
+      </nav>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+  <script src="../../static/js/nav.js" defer></script>
+</body>
+</html>

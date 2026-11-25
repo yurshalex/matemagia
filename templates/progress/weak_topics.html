@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#120d33">
+  <title>Работа над ошибками · МатеМагия</title>
+  <!-- Django-шаблон: progress/weak_topics.html -->
+  <link rel="icon" href="../../static/img/logo_small.png">
+  <link rel="stylesheet" href="../../static/css/main.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">К содержимому</a>
+  <div class="sky" aria-hidden="true"></div>
+
+  <header class="main-navbar">
+    <a class="navbar-logo" href="../dashboard_main.html" aria-label="МатеМагия — на главную">
+      <img src="../../static/img/logo_small.png" alt="" width="48" height="48">
+      <span class="navbar-title">МатеМагия</span>
+    </a>
+    <nav class="nav-links" id="nav-links" aria-label="Главное меню">
+      <a href="../dashboard_main.html">Главная</a>
+      <a href="../learning/topic_catalog.html">Темы</a>
+      <a href="../tests/task_list.html">Тренажёр</a>
+      <a href="../game/challenge_game.html">Испытание</a>
+      <a href="../game/achievements_list.html">Достижения</a>
+    </nav>
+    <div class="navbar-end">
+      <div class="user-profile-widget">
+        <button class="user-profile-btn" type="button" aria-expanded="false" aria-controls="user-menu">
+          <span class="avatar" data-user-initial>А</span>
+          <span class="user-meta"><strong data-user-name>Алиса</strong><small data-user-grade>5 класс</small></span>
+        </button>
+        <div class="user-menu" id="user-menu" hidden>
+          <a href="profile_stats.html">Личный кабинет</a>
+          <a href="progress.html">Статистика</a>
+          <!-- Бэкенд: POST-форма на /logout/ с {% csrf_token %} -->
+          <a href="../home.html" id="btn-logout">Выйти</a>
+        </div>
+      </div>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="Меню">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main id="main" class="page">
+    <div class="page-head">
+      <div data-reveal>
+        <a class="back-link" href="profile_stats.html">← В личный кабинет</a>
+        <h1 class="page-title"><span class="spark" aria-hidden="true">✦</span>Работа над ошибками</h1>
+      </div>
+      <nav class="filter-bar" aria-label="Разделы статистики" data-reveal>
+        <a class="filter-btn" href="progress.html">Обзор</a>
+        <a class="filter-btn" href="history.html">История</a>
+        <a class="filter-btn is-active" href="weak_topics.html" aria-current="page">Работа над ошибками</a>
+      </nav>
+    </div>
+
+    <div class="progress-grid">
+      <!-- Данные: ProgressService.get_weak_topics — < 60 % верных при 3 попытках и больше -->
+      <section class="card card-pad weak-spots-section" data-reveal>
+        <div class="widget-head"><div><h2>Слабые места</h2><p>Меньше 60% верных — начни с них</p></div></div>
+        <ul class="weak-cards">
+          <li>
+            <div class="weak-card-head"><strong>Дроби</strong><span class="bar-value">38% верно</span></div>
+            <div class="progress-bar" data-percent="38"></div>
+            <div class="weak-card-actions"><a class="btn btn-sm btn-outline" href="../learning/theory_view.html">Повторить теорию</a><a class="btn btn-sm btn-primary" href="../tests/task_trainer.html">Тренировать</a></div>
+          </li>
+          <li>
+            <div class="weak-card-head"><strong>Текстовые задачи</strong><span class="bar-value">52% верно</span></div>
+            <div class="progress-bar" data-percent="52"></div>
+            <div class="weak-card-actions"><a class="btn btn-sm btn-outline" href="#" data-soon="Уроки по этой теме скоро появятся">Повторить теорию</a><a class="btn btn-sm btn-primary" href="#" data-soon="Задания по этой теме скоро появятся">Тренировать</a></div>
+          </li>
+        </ul>
+      </section>
+
+      <!-- Данные: ProgressService.get_error_tasks — задания, последняя попытка по которым неверная -->
+      <section class="card card-pad" data-reveal>
+        <div class="widget-head"><div><h2>Задания для повторения</h2><p>Последний ответ был неверным</p></div></div>
+        <ul class="attempts">
+          <li><div><b>Сократи дробь 6/8</b><small>Дроби · ввод ответа</small></div><a class="btn btn-outline btn-sm" href="../tests/task_trainer.html?task=6">Решить</a></li>
+          <li><div><b>3/8 + 1/4</b><small>Дроби · выбор ответа</small></div><a class="btn btn-outline btn-sm" href="../tests/task_trainer.html">Решить</a></li>
+          <li><div><b>Задача о поезде</b><small>Текстовые задачи · ввод ответа</small></div><a class="btn btn-outline btn-sm" href="#" data-soon="Задания по этой теме скоро появятся">Решить</a></li>
+        </ul>
+        <p class="progress-hint">Исправь ошибку — получишь достижение «Работа над ошибками».</p>
+      </section>
+    </div>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+  <script src="../../static/js/nav.js" defer></script>
+</body>
+</html>
