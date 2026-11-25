@@ -55,10 +55,34 @@
       wrong: "При одинаковых знаменателях больше дробь с большим числителем.",
       solution: F(7, 9) + " > " + F(5, 9) + " > " + F(4, 9) + " > " + F(2, 9) + "." }
   ];
-  var CHIP = { choice: "Выбор ответа", input: "Ввод ответа", ordering: "Упорядочивание", matching: "Сопоставление" };
+  // Формат «Верно или нет» (boolean): correct — 0, если утверждение верное, 1 — если нет
+  var BOOL = [
+    { type: "boolean", question: "Верно ли утверждение?", expr: F(3, 5) + " &gt; " + F(2, 5),
+      options: ["Верно", "Неверно"], correct: 0,
+      hint: "Знаменатели одинаковые — сравни числители.",
+      wrong: "При одинаковых знаменателях больше та дробь, у которой больше числитель.",
+      solution: "3 &gt; 2, значит " + F(3, 5) + " &gt; " + F(2, 5) + ". Утверждение верное." },
+    { type: "boolean", question: "Верно ли, что эта дробь правильная?", expr: F(9, 7),
+      options: ["Верно", "Неверно"], correct: 1,
+      hint: "Сравни числитель и знаменатель.",
+      wrong: "У правильной дроби числитель меньше знаменателя, а здесь 9 &gt; 7.",
+      solution: "9 больше 7, поэтому " + F(9, 7) + " — неправильная дробь." },
+    { type: "boolean", question: "Верно ли равенство?", expr: F(1, 2) + " = " + F(4, 8),
+      options: ["Верно", "Неверно"], correct: 0,
+      hint: "Умножь числитель и знаменатель первой дроби на одно и то же число.",
+      wrong: "Если умножить числитель и знаменатель " + F(1, 2) + " на 4, получится " + F(4, 8) + ".",
+      solution: F(1, 2) + " = " + F("1 · 4", "2 · 4") + " = " + F(4, 8) + ". Равенство верное." }
+  ];
+  var CHIP = { choice: "Выбор ответа", input: "Ввод ответа", ordering: "Упорядочивание", matching: "Сопоставление", boolean: "Верно или нет" };
   var BASE_XP = 10, STREAK_MIN = 3, STREAK_BONUS_XP = 5, CHALLENGE_SUCCESS_PERCENT = 60, CHALLENGE_BONUS_XP = 30;
 
   var params = new URLSearchParams(location.search);
+
+  // Серия: с ?type=<формат> — все задания этого формата, иначе смешанная серия из 10
+  var POOL = TASKS.concat(BOOL);
+  var onlyType = params.get("type");
+  if (onlyType && CHIP[onlyType]) TASKS = POOL.filter(function (t) { return t.type === onlyType; });
+  else TASKS = TASKS.slice(0, 6).concat([BOOL[0]], TASKS.slice(7));
   var challenge = params.get("mode") === "challenge";
   var level = +(params.get("level") || 1);
   var topic = params.get("topic") || "Дроби";
@@ -120,8 +144,8 @@
 
   function build(t) {
     var box = document.createElement("div");
-    if (t.type === "choice") {
-      box.className = "options";
+    if (t.type === "choice" || t.type === "boolean") {
+      box.className = t.type === "boolean" ? "options options-bool" : "options";
       box.setAttribute("role", "radiogroup");
       t.options.forEach(function (html, i) {
         var label = document.createElement("label");
@@ -234,7 +258,7 @@
 
   // ---------- Ответ ----------
   function readAnswer(t) {
-    if (t.type === "choice") {
+    if (t.type === "choice" || t.type === "boolean") {
       var c = form.querySelector(".answer-option-input:checked");
       return c ? +c.value : null;
     }
@@ -251,14 +275,14 @@
   }
 
   function isCorrect(t, a) {
-    if (t.type === "choice") return a === t.correct;
+    if (t.type === "choice" || t.type === "boolean") return a === t.correct;
     if (t.type === "input") return t.accept.indexOf(a) !== -1;
     if (t.type === "ordering") return a.join() === t.order.join();
     return a.join() === t.pairs.join();
   }
 
   function mark(t, a, ok, reveal) {
-    if (t.type === "choice") {
+    if (t.type === "choice" || t.type === "boolean") {
       zone.querySelectorAll(".option-item").forEach(function (el, i) {
         el.classList.remove("is-wrong", "is-correct");
         if (i === a) { el.classList.add(ok ? "is-correct" : "is-wrong"); el.querySelector(".option-mark").textContent = ok ? "✓" : "×"; }
@@ -399,6 +423,18 @@
   function finish() {
     var correct = results.filter(function (r) { return r === "correct"; }).length;
     var percent = Math.round(correct / TASKS.length * 100);
+    if (challenge) {
+      // Итоги испытания — отдельная страница (game/game_result.html)
+      if (percent >= CHALLENGE_SUCCESS_PERCENT) {
+        xp += CHALLENGE_BONUS_XP;
+        try {
+          var passedBefore = +(localStorage.getItem("mm_levels_passed") || 0);
+          localStorage.setItem("mm_levels_passed", Math.max(passedBefore, level));
+        } catch (err) {}
+      }
+      location.href = $("trainer-card").dataset.resultUrl + "?correct=" + correct + "&total=" + TASKS.length + "&xp=" + xp + "&level=" + level;
+      return;
+    }
     $("trainer-card").hidden = true;
     var card = $("result-card");
     card.hidden = false;
@@ -406,23 +442,7 @@
       return '<span class="star is-' + (r || "skip") + '" style="--n:' + i + '"></span>';
     }).join("");
     var text = "Верно " + correct + " из " + TASKS.length + " (" + percent + "%)";
-    if (challenge) {
-      var passed = percent >= CHALLENGE_SUCCESS_PERCENT;
-      $("result-title").textContent = passed ? "Испытание пройдено!" : "Почти получилось!";
-      if (passed) {
-        xp += CHALLENGE_BONUS_XP;
-        text += " · бонус +" + CHALLENGE_BONUS_XP + " опыта";
-        try {
-          var done = +(localStorage.getItem("mm_levels_passed") || 0);
-          localStorage.setItem("mm_levels_passed", Math.max(done, level));
-        } catch (err) {}
-        if (level < 4) text += " · открыт уровень " + (level + 1);
-      } else {
-        text += " · нужно от " + CHALLENGE_SUCCESS_PERCENT + "%";
-      }
-    } else {
-      $("result-title").textContent = correct >= 7 ? "Отличная серия!" : "Серия пройдена!";
-    }
+    $("result-title").textContent = percent >= 70 ? "Отличная серия!" : "Серия пройдена!";
     $("result-text").textContent = text;
     $("result-xp").textContent = "+" + xp + " опыта";
     stars.forEach(function (s) { s.classList.remove("is-current"); });

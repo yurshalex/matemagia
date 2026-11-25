@@ -1,9 +1,23 @@
-// Общее для всех страниц: профиль, анимации появления, счётчики, всплывающее сообщение
+// Общее для всех страниц: меню на телефоне, профиль, анимации появления, счётчики, всплывающее сообщение
 (function () {
   // Каскадное появление элементов [data-reveal]
   document.querySelectorAll("[data-reveal]").forEach(function (el, i) {
     el.style.setProperty("--i", i);
   });
+
+  // Меню на телефоне (кнопка-бургер)
+  var navBtn = document.querySelector(".nav-toggle");
+  var nav = document.getElementById("nav-links");
+  if (navBtn && nav) {
+    var setNav = function (open) {
+      nav.classList.toggle("is-open", open);
+      navBtn.setAttribute("aria-expanded", String(open));
+      navBtn.setAttribute("aria-label", open ? "Закрыть меню" : "Меню");
+    };
+    navBtn.addEventListener("click", function (e) { e.stopPropagation(); setNav(!nav.classList.contains("is-open")); });
+    document.addEventListener("click", function (e) { if (!nav.contains(e.target)) setNav(false); });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape") setNav(false); });
+  }
 
   // Меню профиля
   var userBtn = document.querySelector(".user-profile-btn");
@@ -57,6 +71,17 @@
     if (!link) return;
     e.preventDefault();
     window.mmToast(link.dataset.soon || "Эта страница ещё в разработке");
+  });
+
+  // Прототип: формы выбора темы запускаются только для темы с заданиями (option[data-ready])
+  document.querySelectorAll("form[data-demo-form]").forEach(function (f) {
+    f.addEventListener("submit", function (e) {
+      var opt = f.querySelector("select").selectedOptions[0];
+      if (!opt.hasAttribute("data-ready")) {
+        e.preventDefault();
+        window.mmToast("Задания по теме «" + opt.textContent + "» скоро появятся");
+      }
+    });
   });
 
   // Счётчики, которые «набегают» от 0
