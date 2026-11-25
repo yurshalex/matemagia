@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#120d33">
+  <title>Тренажёр · МатеМагия</title>
+  <!-- Django-шаблон: tests/task_list.html -->
+  <link rel="icon" href="../../static/img/logo_small.png">
+  <link rel="stylesheet" href="../../static/css/main.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">К содержимому</a>
+  <div class="sky" aria-hidden="true"></div>
+
+  <header class="main-navbar">
+    <a class="navbar-logo" href="../dashboard_main.html" aria-label="МатеМагия — на главную">
+      <img src="../../static/img/logo_small.png" alt="" width="48" height="48">
+      <span class="navbar-title">МатеМагия</span>
+    </a>
+    <nav class="nav-links" id="nav-links" aria-label="Главное меню">
+      <a href="../dashboard_main.html">Главная</a>
+      <a href="../learning/topic_catalog.html">Темы</a>
+      <a href="task_list.html" class="is-active" aria-current="page">Тренажёр</a>
+      <a href="../game/challenge_game.html">Испытание</a>
+      <a href="../game/achievements_list.html">Достижения</a>
+    </nav>
+    <div class="navbar-end">
+      <div class="user-profile-widget">
+        <button class="user-profile-btn" type="button" aria-expanded="false" aria-controls="user-menu">
+          <span class="avatar" data-user-initial>А</span>
+          <span class="user-meta"><strong data-user-name>Алиса</strong><small data-user-grade>5 класс</small></span>
+        </button>
+        <div class="user-menu" id="user-menu" hidden>
+          <a href="../progress/profile_stats.html">Личный кабинет</a>
+          <a href="../progress/progress.html">Статистика</a>
+          <!-- Бэкенд: POST-форма на /logout/ с {% csrf_token %} -->
+          <a href="../home.html" id="btn-logout">Выйти</a>
+        </div>
+      </div>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="Меню">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main id="main" class="page">
+    <div class="page-head">
+      <div data-reveal>
+        <h1 class="page-title"><span class="spark" aria-hidden="true">✦</span>Тренажёр</h1>
+        <p class="page-lead">Выбери тему и формат — сова подберёт сложность под тебя.</p>
+      </div>
+    </div>
+
+    <!-- Бэкенд: GET /tasks/?topic=<id>&type=<формат> начинает серию из 10 заданий -->
+    <form class="card trainer-setup" action="task_trainer.html" method="get" data-demo-form data-reveal>
+      <div class="field">
+        <label for="task-topic">Тема</label>
+        <select name="topic" id="task-topic">
+          <option>Натуральные числа</option>
+          <option>Сложение и вычитание</option>
+          <option>Умножение и деление</option>
+          <option selected data-ready>Дроби</option>
+          <option>Десятичные дроби</option>
+          <option>Текстовые задачи</option>
+          <option>Геометрия</option>
+          <option>Площади и объёмы</option>
+        </select>
+      </div>
+
+      <fieldset class="format-grid">
+        <legend>Формат заданий</legend>
+        <label class="format-card"><input type="radio" name="type" value="" checked><span class="hex hex-sm" aria-hidden="true">∗</span><b>Все форматы</b><small>Вперемешку</small></label>
+        <label class="format-card"><input type="radio" name="type" value="choice"><span class="hex hex-sm" aria-hidden="true">◉</span><b>Выбор ответа</b><small>Один верный вариант</small></label>
+        <label class="format-card"><input type="radio" name="type" value="input"><span class="hex hex-sm" aria-hidden="true">✎</span><b>Ввод ответа</b><small>Число или дробь</small></label>
+        <label class="format-card"><input type="radio" name="type" value="boolean"><span class="hex hex-sm" aria-hidden="true">✓</span><b>Верно или нет</b><small>Проверь утверждение</small></label>
+        <label class="format-card"><input type="radio" name="type" value="ordering"><span class="hex hex-sm" aria-hidden="true">⇅</span><b>По порядку</b><small>Возрастание и убывание</small></label>
+        <label class="format-card"><input type="radio" name="type" value="matching"><span class="hex hex-sm" aria-hidden="true">⇄</span><b>Сопоставление</b><small>Найди пары</small></label>
+      </fieldset>
+
+      <div class="setup-foot">
+        <p class="setup-note">10 заданий · опыт за верный ответ с первой попытки · бонус за серию от 3 подряд</p>
+        <button class="btn btn-primary btn-lg" type="submit">Начать тренировку</button>
+      </div>
+    </form>
+
+    <!-- Данные: ProgressService.get_weak_topics — рекомендации -->
+    <section class="recommend" data-reveal>
+      <h2 class="section-title">Сова советует</h2>
+      <div class="recommend-grid">
+        <a class="card recommend-card" href="task_trainer.html">
+          <span class="topic-icon" aria-hidden="true">½</span>
+          <span><strong>Дроби</strong><small>38% верных — слабая тема</small></span>
+          <span class="lesson-go" aria-hidden="true">→</span>
+        </a>
+        <a class="card recommend-card" href="#" data-soon="Задания по теме «Текстовые задачи» скоро появятся">
+          <span class="topic-icon" aria-hidden="true">?</span>
+          <span><strong>Текстовые задачи</strong><small>52% верных — стоит повторить</small></span>
+          <span class="lesson-go" aria-hidden="true">→</span>
+        </a>
+        <a class="card recommend-card" href="../progress/weak_topics.html">
+          <span class="topic-icon" aria-hidden="true">!</span>
+          <span><strong>Работа над ошибками</strong><small>2 задания для повторения</small></span>
+          <span class="lesson-go" aria-hidden="true">→</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+  <script src="../../static/js/nav.js" defer></script>
+</body>
+</html>
