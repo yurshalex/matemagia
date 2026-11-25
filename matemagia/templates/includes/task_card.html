@@ -1,0 +1,45 @@
+{% load static %}
+{# Карточка задания для task_check.js. mode: series | single | challenge #}
+<div class="task-head" data-reveal>
+  <h1 class="task-header" id="task-header">{{ heading }}</h1>
+  <div class="rating-stars-bar" id="rating-stars-bar" aria-label="Прогресс серии"><span class="counter" id="task-counter">{{ position|default:1 }} / {{ total|default:10 }}</span></div>
+</div>
+
+<section class="paper trainer-card{% if mode == 'challenge' %} is-challenge{% endif %}" id="trainer-card" data-reveal
+         data-mode="{{ mode }}" data-total="{{ total|default:10 }}" data-position="{{ position|default:1 }}"
+         data-next-url="{% url 'task_next' %}" data-check-url="{% url 'check_answer' 0 %}"
+         data-answer-url="{% url 'game' %}" data-challenge-url="{% url 'game' %}" data-result-url="{% url 'game_result' %}"
+         data-done-url="{{ done_url|default:'/progress/errors/' }}">
+  <form class="task-area" id="task-form" novalidate>
+    {% csrf_token %}
+    <span class="task-chip" id="task-chip">Заклинание</span>
+    <p class="task-question" id="task-question">Сова подбирает задание…</p>
+    <div id="answer-zone"></div>
+    <div class="feedback-panel" id="feedback-panel" role="status" hidden></div>
+    <div class="task-actions">
+      <button class="btn btn-violet" id="btn-check" type="submit">Проверить</button>
+      <button class="btn btn-violet" id="btn-retry-task" type="button" hidden>Попробовать снова</button>
+      <button class="btn btn-primary" id="btn-next-task" type="button" hidden>Дальше →</button>
+      <button class="btn btn-light" id="btn-skip-task" type="button" hidden>Пропустить</button>
+      <button class="btn-show-solution" id="btn-show-solution" type="button" hidden>Показать ответ →</button>
+    </div>
+  </form>
+  <aside class="owl-hint-box" id="owl-hint-box">
+    <img src="{% static 'img/owl.svg' %}" alt="" width="48" height="48">
+    <h2>{% if mode == "challenge" %}Правила испытания{% else %}Совет мудрой совы{% endif %}</h2>
+    <p id="hint-text"></p>
+    {% if mode == "challenge" %}<p class="owl-rule">Одна попытка на задание. От 60% верных — испытание пройдено.</p>{% endif %}
+  </aside>
+</section>
+
+<section class="paper result-card" id="result-card" hidden>
+  <h2 id="result-title">Серия пройдена!</h2>
+  <div class="result-stars" id="result-stars"></div>
+  <p id="result-text"></p>
+  <p class="result-xp" id="result-xp"></p>
+  <div class="hero-actions">
+    <a class="btn btn-violet" id="btn-again" href="{% if again_topic %}{% url 'task_list' %}?topic={{ again_topic }}{% else %}{{ again_url }}{% endif %}">Ещё серия</a>
+    <a class="btn btn-light" href="{% url 'topic_list' %}">К темам</a>
+  </div>
+</section>
+{% if task %}{{ task|json_script:"task-data" }}{% endif %}

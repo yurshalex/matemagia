@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{{ topic.title }}{% endblock %}
+{% block content %}
+<a class="back-link" href="{% url 'topic_list' %}">← Назад к книгам</a>
+
+<section class="card topic-hero" data-reveal>
+  <span class="topic-icon topic-icon-lg" aria-hidden="true">{% include "includes/topic_icon.html" %}</span>
+  <div class="topic-hero-body">
+    <div class="topic-hero-head"><h1 class="page-title">{{ topic.title }}</h1></div>
+    {% if topic.description %}<p class="page-lead">{{ topic.description }}</p>{% endif %}
+    <div class="topic-hero-stats">
+      <div><small>Уроков</small><strong>{{ lessons|length }}</strong></div>
+      <div><small>Заданий в тренажёре</small><strong>{{ topic.tasks.count }}</strong></div>
+    </div>
+  </div>
+</section>
+
+<div class="topic-detail-grid">
+  <section class="card card-pad" data-reveal>
+    <div class="widget-head"><div><h2>Уроки</h2><p>Прочитай теорию, затем закрепи в тренажёре</p></div></div>
+    {% if lessons %}
+    <ol class="lesson-list">
+      {% for l in lessons %}
+      <li><a href="{% url 'theory' l.id %}"><span class="lesson-num">{{ forloop.counter }}</span><span>{{ l.title }}</span><span class="lesson-go" aria-hidden="true">→</span></a></li>
+      {% endfor %}
+    </ol>
+    {% else %}
+    <p class="empty-state">Уроки по этой теме скоро появятся.</p>
+    {% endif %}
+  </section>
+
+  <aside class="topic-actions" data-reveal>
+    {% if lessons %}
+    <a class="action-card card" href="{% url 'theory' lessons.0.id %}">
+      <span class="hex hex-gold hex-sm" aria-hidden="true">≡</span>
+      <span><strong>Читать теорию</strong><small>Урок 1 · {{ lessons.0.title }}</small></span>
+    </a>
+    {% endif %}
+    <a class="action-card card" href="{% url 'task_list' %}?topic={{ topic.id }}">
+      <span class="hex hex-sm" aria-hidden="true">✎</span>
+      <span><strong>Тренажёр</strong><small>10 заданий по теме</small></span>
+    </a>
+    <form method="post" action="{% url 'game_start' %}">
+      {% csrf_token %}
+      <input type="hidden" name="topic_id" value="{{ topic.id }}">
+      <button class="action-card card" type="submit">
+        <span class="hex hex-sm" aria-hidden="true">★</span>
+        <span><strong>Испытание</strong><small>Серия без подсказок · +30 опыта</small></span>
+      </button>
+    </form>
+    <div class="owl-tip">
+      <img src="{% static 'img/owl.svg' %}" alt="" width="40" height="40">
+      <p>Сначала прочитай уроки по порядку, потом переходи к заданиям.</p>
+    </div>
+  </aside>
+</div>
+{% endblock %}

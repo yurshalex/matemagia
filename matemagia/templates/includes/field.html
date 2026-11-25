@@ -1,0 +1,8 @@
+{# Поле формы. name, label, type, value, error, help, placeholder, autocomplete #}
+<div class="field{% if error %} has-error{% endif %}">
+  <label for="id_{{ name }}">{{ label }}</label>
+  <input type="{{ type|default:'text' }}" name="{{ name }}" id="id_{{ name }}"{% if value %} value="{{ value }}"{% endif %}
+         placeholder="{{ placeholder }}" autocomplete="{{ autocomplete|default:'off' }}"{% if pattern %} pattern="{{ pattern }}"{% endif %} required>
+  {% if help %}<p class="field-help"{% if error %} hidden{% endif %}>{{ help }}</p>{% endif %}
+  <p class="field-error"{% if not error %} hidden{% endif %}>{{ error }}</p>
+</div>

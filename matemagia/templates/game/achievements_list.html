@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Ранги и достижения{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div data-reveal>
+    <h1 class="page-title"><span class="spark" aria-hidden="true">✦</span>Ранги и достижения</h1>
+    <p class="page-lead">Решай задания и проходи испытания — копи опыт от Янтарного до Звёздного мага.</p>
+  </div>
+</div>
+
+<section class="card ranks-roadmap" data-reveal>
+  <h2>Путь мага</h2>
+  <div class="ranks-row">
+    {% for r in rank_info.ranks %}
+    <button class="rank-card {% include 'includes/rank_class.html' with n=forloop.counter %}{% if r.name == rank_info.rank %} is-current{% elif r.reached %} is-reached{% elif r.name == rank_info.next_rank %} is-next is-locked{% else %} is-locked{% endif %}{% if forloop.last %} is-top{% endif %}" type="button"
+            data-title="{{ r.name }}" data-condition="{% if forloop.first %}Первый ранг каждого ученика{% else %}Набери {{ r.threshold }} опыта{% endif %}"
+            data-status="{% if r.reached %}Открыт{% else %}Закрыт{% endif %}" data-icon="{{ forloop.counter }}">
+      <span class="crystal" aria-hidden="true"><span class="hex">{{ forloop.counter }}</span></span>
+      <strong>{{ r.name }}</strong>
+      <small>{% if r.name == rank_info.rank %}Текущий ранг{% elif r.reached %}Получен{% else %}от {{ r.threshold }} опыта{% endif %}</small>
+    </button>
+    {% endfor %}
+  </div>
+  <div class="progress-label"><span>{% if rank_info.next_rank %}До ранга «{{ rank_info.next_rank }}»{% else %}Высший ранг получен{% endif %}</span><span>{{ rank_info.xp }}{% if rank_info.next_rank %} / {{ rank_info.xp|add:rank_info.xp_to_next }}{% endif %}</span></div>
+  <div class="progress-bar"><span class="rank-progress-fill" style="width: {{ rank_info.progress_percent }}%"></span></div>
+</section>
+
+<div class="widget-head" data-reveal>
+  <h2 class="section-title flush">Магические награды</h2>
+  <span class="achievements-counter">Получено {{ achievements.unlocked_count }} из {{ achievements.total }} · испытаний пройдено: {{ challenges_passed }}</span>
+</div>
+<section class="achievements-grid">
+  {% for a in achievements.items %}
+  <button class="card achievement-card {% if a.unlocked %}unlocked{% else %}locked{% endif %}" type="button" data-reveal
+          data-title="{{ a.title }}" data-condition="{{ a.description }}" data-reward="{% if a.xp_reward %}+{{ a.xp_reward }} опыта{% endif %}"
+          data-status="{% if a.unlocked %}Получено {{ a.unlocked_at|date:'d.m.Y' }}{% else %}Ещё не получено{% endif %}" data-icon="{% include 'includes/ach_icon.html' with code=a.icon_code %}">
+    <span class="hex{% if a.unlocked %} hex-gold{% endif %}" aria-hidden="true">{% include "includes/ach_icon.html" with code=a.icon_code %}</span>
+    <span><strong>{{ a.title }}</strong><small>{{ a.description }}</small></span>
+  </button>
+  {% endfor %}
+</section>
+
+<dialog class="modal" id="achievement-modal" aria-labelledby="modal-title">
+  <div class="card modal-card">
+    <span class="hex hex-gold" id="modal-icon" aria-hidden="true">★</span>
+    <h2 id="modal-title"></h2>
+    <p id="modal-condition"></p>
+    <span class="status" id="modal-status"></span>
+    <p class="text-gold" id="modal-reward"></p>
+    <form method="dialog"><button class="btn btn-primary">Понятно</button></form>
+  </div>
+</dialog>
+{% endblock %}
+{% block scripts %}<script src="{% static 'js/achievements.js' %}" defer></script>{% endblock %}

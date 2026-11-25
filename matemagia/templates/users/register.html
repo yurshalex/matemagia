@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Регистрация{% endblock %}
+{% block header %}{% endblock %}
+{% block main_class %}auth-page{% endblock %}
+{% block content %}
+{% include "includes/auth_hero.html" %}
+<section class="auth-card card" aria-labelledby="auth-title" data-reveal>
+  <nav class="auth-tabs" data-active="register" aria-label="Вход или регистрация">
+    <a id="tab-login" href="{% url 'login' %}">Вход</a>
+    <a id="tab-register" href="{% url 'register' %}" class="is-active" aria-current="page">Регистрация</a>
+  </nav>
+  <h1 id="auth-title" class="auth-title">Стань учеником школы магии!</h1>
+
+  <form class="auth-form" id="register-form" method="post" action="{% url 'register' %}" novalidate>
+    {% csrf_token %}
+    {# Общая ошибка формы приходит под ключом "__all__"; в шаблоне к нему нельзя обратиться через точку #}
+    <div class="form-alert" id="form-alert" role="alert"{% if not errors %} hidden{% endif %}>{% for k, v in errors.items %}{% if k == "__all__" %}{{ v }}{% endif %}{% endfor %}</div>
+    <div class="field-row">
+      {% include "includes/field.html" with name="first_name" label="Имя" value=values.first_name error=errors.first_name placeholder="Алиса" autocomplete="given-name" %}
+      <div class="field{% if errors.grade %} has-error{% endif %}">
+        <label for="id_grade">Класс</label>
+        <select name="grade" id="id_grade">
+          <option value="5 класс"{% if values.grade != "6 класс" %} selected{% endif %}>5 класс</option>
+          <option value="6 класс"{% if values.grade == "6 класс" %} selected{% endif %}>6 класс</option>
+        </select>
+      </div>
+    </div>
+    {% include "includes/field.html" with name="username" label="Логин" value=values.username error=errors.username placeholder="alisa5" autocomplete="username" pattern="[A-Za-z0-9@.+\-_]+" help="Латиница, цифры и @ . + - _" %}
+    {% if errors.password %}{% include "includes/field.html" with name="password1" label="Пароль" type="password" error=errors.password placeholder="Не меньше 8 символов" autocomplete="new-password" %}
+    {% else %}{% include "includes/field.html" with name="password1" label="Пароль" type="password" error=errors.password1 placeholder="Не меньше 8 символов" autocomplete="new-password" help="Не меньше 8 символов, не только цифры" %}{% endif %}
+    {% include "includes/field.html" with name="password2" label="Повтори пароль" type="password" error=errors.password2 placeholder="Ещё раз" autocomplete="new-password" %}
+    <button type="submit" id="btn-submit-register" class="btn btn-primary btn-block btn-lg">Начать обучение</button>
+  </form>
+</section>
+{% endblock %}
+{% block scripts %}<script src="{% static 'js/auth.js' %}" defer></script>{% endblock %}

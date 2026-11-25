@@ -1,0 +1,1 @@
+{# Значок темы по slug (в модели Topic нет поля icon) #}{% with s=topic.slug %}{% if s == "natural-numbers" %}123{% elif s == "add-sub" %}±{% elif s == "mul-div" %}×{% elif s == "fractions" %}½{% elif s == "decimals" %}0,5{% elif s == "word-problems" %}?{% elif s == "geometry" %}△{% elif s == "area-volume" %}м²{% else %}{{ topic.title|first }}{% endif %}{% endwith %}

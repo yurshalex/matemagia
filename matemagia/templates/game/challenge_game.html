@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Испытание{% endblock %}
+{% block content %}
+{% if active %}
+  {# Идёт испытание: текущее задание из ChallengeService.get_current_task #}
+  <a class="back-link" href="{% url 'home' %}">← На главную</a>
+  {% include "includes/task_card.html" with mode="challenge" heading="Испытание" %}
+{% else %}
+<div class="challenge-head">
+  <div data-reveal>
+    <h1 class="page-title text-gold">Испытание</h1>
+    <p class="page-lead">Пройди серию из 10 заданий без подсказок: сложность растёт с каждым шагом.</p>
+  </div>
+  {% if rank_info %}
+  <article class="card challenge-rank-card" data-reveal>
+    <div class="rank-head">
+      <div class="hex hex-gold hex-sm" aria-hidden="true">★</div>
+      <div><p class="widget-label">Текущий ранг</p><h2 class="rank-name">{{ rank_info.rank }}</h2></div>
+    </div>
+    <div class="progress-bar progress-sm"><span style="width: {{ rank_info.progress_percent }}%"></span></div>
+    <p class="progress-hint">{{ rank_info.xp }}{% if rank_info.next_rank %} / {{ rank_info.xp|add:rank_info.xp_to_next }} опыта · следующий — {{ rank_info.next_rank }}{% else %} опыта{% endif %}</p>
+  </article>
+  {% endif %}
+</div>
+
+<img class="castle" src="{% static 'img/castle.svg' %}" alt="" width="230" height="192" data-reveal>
+
+{# Уровни: число успешно пройденных испытаний (levels из game/views.py) #}
+<ol class="challenge-map" id="challenge-map" style="--progress: {% if levels_passed >= 3 %}1{% elif levels_passed == 2 %}.667{% elif levels_passed == 1 %}.333{% else %}0{% endif %}" aria-label="Уровни испытания" data-reveal>
+  {% for lv in levels %}
+  <li><div class="challenge-node-level is-{{ lv.status }}">
+    <span class="node-circle">{% if lv.status == "passed" %}✓{% elif lv.status == "open" %}★{% else %}<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>{% endif %}</span>
+    <strong>Уровень {{ lv.level }}</strong><small>{% if lv.status == "passed" %}Пройден{% elif lv.status == "open" %}Доступен{% else %}Закрыт{% endif %}</small>
+  </div></li>
+  {% endfor %}
+</ol>
+
+<form class="card challenge-form" id="challenge-form" method="post" action="{% url 'game_start' %}" data-reveal>
+  {% csrf_token %}
+  {% if errors %}<div class="form-alert" role="alert">{% for k, v in errors.items %}{{ v }} {% endfor %}</div>{% endif %}
+  <div class="start-row">
+    <div class="field">
+      <label for="challenge-topic-select">Выбери тему</label>
+      <select name="topic_id" id="challenge-topic-select">
+        {% for t in topics %}<option value="{{ t.id }}">{{ t.title }}</option>{% endfor %}
+      </select>
+    </div>
+    <button class="btn btn-primary btn-lg" id="btn-start-challenge" type="submit">Начать испытание</button>
+  </div>
+  <div class="challenge-info">
+    <div class="info-block"><small>Задания</small><strong>10 вопросов</strong></div>
+    <div class="info-block"><small>Условие</small><strong>от 60% верных</strong></div>
+    <div class="info-block"><small>Награда</small><strong class="text-gold">+30 опыта</strong></div>
+  </div>
+</form>
+{% endif %}
+{% endblock %}
+{% block scripts %}{% if active %}<script src="{% static 'js/task_check.js' %}" defer></script>{% endif %}{% endblock %}

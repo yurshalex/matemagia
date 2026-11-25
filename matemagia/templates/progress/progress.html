@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Статистика{% endblock %}
+{% block content %}
+{% include "includes/stats_tabs.html" with title="Статистика" tab="progress" %}
+<section class="stats-grid" aria-label="Сводные показатели">
+  <article class="card stat-card" data-reveal><small>Всего решено</small><strong data-count="{{ stats.total|default:0 }}">{{ stats.total|default:0 }}</strong></article>
+  <article class="card stat-card" data-reveal><small>Верно</small><strong data-count="{{ stats.correct|default:0 }}">{{ stats.correct|default:0 }}</strong></article>
+  <article class="card stat-card" data-reveal><small>Неверно</small><strong data-count="{{ stats.wrong|default:0 }}">{{ stats.wrong|default:0 }}</strong></article>
+  <article class="card stat-card" data-reveal><small>Процент верных</small><strong data-count="{{ stats.percent_correct|default:0|floatformat:0 }}" data-suffix="%">{{ stats.percent_correct|default:0|floatformat:0 }}%</strong></article>
+</section>
+<div class="progress-grid">
+  <article class="card card-pad accuracy-card" data-reveal>
+    <div class="widget-head"><div><h2>Точность ответов</h2><p>Доля верных среди всех попыток</p></div></div>
+    <div class="score-ring{% if stats.percent_correct < 60 %} is-fail{% endif %}" style="--p: {{ stats.percent_correct|default:0|floatformat:0 }}" role="img" aria-label="{{ stats.percent_correct|default:0|floatformat:0 }}% верных">
+      <div><strong>{{ stats.percent_correct|default:0|floatformat:0 }}%</strong><small>{{ stats.correct|default:0 }} из {{ stats.total|default:0 }}</small></div>
+    </div>
+    {% if rank_info %}<p class="progress-hint">Ранг: {{ rank_info.rank }} · {{ rank_info.xp }} опыта</p>{% endif %}
+  </article>
+  <article class="card card-pad" data-reveal>
+    <div class="widget-head"><div><h2>Прогресс по темам</h2><p>Процент верных ответов</p></div></div>
+    {% if topic_progress %}{% include "includes/bar_list.html" with rows=topic_progress %}
+    {% else %}<p class="empty-state">Пока нет решённых заданий.</p>{% endif %}
+  </article>
+</div>
+{% endblock %}

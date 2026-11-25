@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Страница не найдена{% endblock %}
+{% block content %}
+<section class="error-page" data-reveal>
+  <img src="{% static 'img/owl.svg' %}" alt="" width="120" height="120">
+  <h1>404</h1>
+  <p>Такой страницы нет даже в книге заклинаний.</p>
+  <div class="hero-actions"><a class="btn btn-primary" href="{% url 'home' %}">На главную</a><a class="btn btn-outline" href="{% url 'topic_list' %}">К темам</a></div>
+</section>
+{% endblock %}

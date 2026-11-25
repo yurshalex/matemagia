@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Главная{% endblock %}
+{% block content %}
+<section class="welcome-banner">
+  <div class="welcome-text">
+    <span class="badge-pill" data-reveal>✦ Школа магии чисел · {{ user.grade }}</span>
+    <h1 class="hero-title" data-reveal>{{ user.first_name|default:user.username }}, добро пожаловать в <span class="text-gold">МатеМагию</span>!</h1>
+    <p class="hero-lead" data-reveal>Решай задания, открывай книги заклинаний и стань настоящим магом математики.</p>
+    <div class="hero-actions" data-reveal>
+      <a id="btn-continue-learning" class="btn btn-primary btn-lg" href="{% url 'task_list' %}">Начать тренировку</a>
+      <a id="btn-select-topic" class="btn btn-outline btn-lg" href="{% url 'topic_list' %}">Выбрать тему</a>
+    </div>
+  </div>
+  {% include "includes/logo_orbit.html" %}
+</section>
+
+<section class="dashboard-grid">
+  <article class="card card-pad" id="widget-current-rank" data-reveal>
+    {% if rank_info %}{% include "includes/rank_widget.html" %}{% endif %}
+  </article>
+
+  <article class="card card-pad card-accent widget-active-lesson" id="widget-active-lesson" data-reveal>
+    <p class="widget-label">Испытание</p>
+    <h2 class="lesson-title">10 заданий без подсказок</h2>
+    <p class="lesson-empty">Набери от 60% верных ответов — получишь +30 опыта и откроешь новый уровень.</p>
+    <a id="btn-continue-workout" class="btn btn-primary" href="{% url 'game' %}">К испытанию</a>
+  </article>
+
+  <article class="card card-pad wide" id="widget-weak-spots" data-reveal>
+    <div class="widget-head">
+      <h2>Слабые места</h2>
+      <a id="link-full-stats" class="link-gold" href="{% url 'progress' %}">Вся статистика</a>
+    </div>
+    {% if weak_topics %}
+      {% include "includes/bar_list.html" with rows=weak_topics %}
+    {% else %}
+      <p class="empty-state">Слабых мест пока нет. Тема попадает сюда, если в ней меньше 60% верных ответов при трёх и более попытках.</p>
+    {% endif %}
+  </article>
+</section>
+{% endblock %}

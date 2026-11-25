@@ -1,0 +1,65 @@
+{% load static %}<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#120d33">
+  <title>{% block title %}МатеМагия{% endblock %} · МатеМагия</title>
+  <link rel="icon" href="{% static 'img/logo_small.png' %}">
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+</head>
+<body>
+  <a class="skip-link" href="#main">К содержимому</a>
+  <div class="sky" aria-hidden="true"></div>
+
+  {% block header %}
+  {% with u=request.resolver_match.url_name %}
+  <header class="main-navbar">
+    <a class="navbar-logo" href="{% url 'home' %}" aria-label="МатеМагия — на главную">
+      <img src="{% static 'img/logo_small.png' %}" alt="" width="48" height="48">
+      <span class="navbar-title">МатеМагия</span>
+    </a>
+    {% if user.is_authenticated %}
+    <nav class="nav-links" id="nav-links" aria-label="Главное меню">
+      <a href="{% url 'home' %}"{% if u == 'home' %} class="is-active" aria-current="page"{% endif %}>Главная</a>
+      <a href="{% url 'topic_list' %}"{% if u == 'topic_list' or u == 'topic_detail' or u == 'theory' %} class="is-active" aria-current="page"{% endif %}>Темы</a>
+      <a href="{% url 'task_list' %}"{% if u == 'task_list' or u == 'task_detail' or u == 'check_answer' %} class="is-active" aria-current="page"{% endif %}>Тренажёр</a>
+      <a href="{% url 'game' %}"{% if u == 'game' or u == 'game_result' %} class="is-active" aria-current="page"{% endif %}>Испытание</a>
+      <a href="{% url 'achievements' %}"{% if u == 'achievements' %} class="is-active" aria-current="page"{% endif %}>Достижения</a>
+    </nav>
+    <div class="navbar-end">
+      <div class="user-profile-widget">
+        <button class="user-profile-btn" type="button" aria-expanded="false" aria-controls="user-menu">
+          <span class="avatar">{{ user.first_name|default:user.username|first|upper }}</span>
+          <span class="user-meta"><strong>{{ user.first_name|default:user.username }}</strong><small>{{ user.grade }}</small></span>
+        </button>
+        <div class="user-menu" id="user-menu" hidden>
+          <a href="{% url 'profile' %}">Личный кабинет</a>
+          <a href="{% url 'progress' %}">Статистика</a>
+          <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button type="submit" id="btn-logout">Выйти</button></form>
+        </div>
+      </div>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="Меню">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    {% else %}
+    <span></span>
+    <div class="navbar-end guest-actions">
+      <a class="btn btn-outline btn-sm" href="{% url 'login' %}">Войти</a>
+      <a class="btn btn-primary btn-sm" href="{% url 'register' %}">Регистрация</a>
+    </div>
+    {% endif %}
+  </header>
+  {% endwith %}
+  {% endblock %}
+
+  <main id="main" class="{% block main_class %}page{% endblock %}">
+    {% block content %}{% endblock %}
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+  <script src="{% static 'js/nav.js' %}" defer></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

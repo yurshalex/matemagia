@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Итоги испытания{% endblock %}
+{% block content %}
+<section class="paper result-page game-result{% if not result.success %} is-fail{% endif %}" data-reveal>
+  <img class="castle castle-sm" src="{% static 'img/castle.svg' %}" alt="" width="160" height="134">
+  <h1>{% if result.success %}Испытание пройдено!{% else %}Почти получилось!{% endif %}</h1>
+  <p class="result-sub">{{ result.topic_title }}</p>
+
+  <div class="score-ring{% if not result.success %} is-fail{% endif %}" data-percent-ring="{{ result.percent }}" style="--p: {{ result.percent }}" role="img" aria-label="{{ result.percent }}% верных ответов">
+    <div><strong>{{ result.percent }}%</strong><small>{{ result.correct }} из {{ result.total }}</small></div>
+  </div>
+
+  <ul class="result-facts">
+    <li><small>Очки</small><strong>{{ result.score }}</strong></li>
+    <li><small>Бонус</small><strong class="text-xp">{% if result.bonus_xp %}+{{ result.bonus_xp }}{% else %}—{% endif %}</strong></li>
+    <li><small>Ранг</small><strong>{{ result.rank }}</strong></li>
+  </ul>
+  {% if result.rank_changed %}<p class="new-rank">✦ Новый ранг: {{ result.rank }}!</p>{% endif %}
+  {% if result.new_achievements %}
+  <ul class="new-achievements">
+    {% for a in result.new_achievements %}<li><span class="hex hex-gold hex-sm" aria-hidden="true">{% include "includes/ach_icon.html" with code=a.icon_code %}</span>{{ a.title }}{% if a.xp_reward %} · +{{ a.xp_reward }} опыта{% endif %}</li>{% endfor %}
+  </ul>
+  {% endif %}
+  {% if not result.success %}<p class="result-sub">Для прохождения нужно от 60% верных ответов.</p>{% endif %}
+
+  <div class="hero-actions">
+    <form method="post" action="{% url 'game_start' %}">{% csrf_token %}<input type="hidden" name="topic_id" value="{{ result.topic_id }}"><button class="btn btn-violet" type="submit">{% if result.success %}Ещё испытание{% else %}Попробовать снова{% endif %}</button></form>
+    <a class="btn btn-light" href="{% url 'achievements' %}">Мои достижения</a>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}<script src="{% static 'js/game_result.js' %}" defer></script>{% endblock %}

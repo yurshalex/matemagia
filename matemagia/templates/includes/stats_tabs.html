@@ -1,0 +1,11 @@
+<div class="page-head">
+  <div data-reveal>
+    <a class="back-link" href="{% url 'profile' %}">← В личный кабинет</a>
+    <h1 class="page-title"><span class="spark" aria-hidden="true">✦</span>{{ title }}</h1>
+  </div>
+  <nav class="filter-bar" aria-label="Разделы статистики" data-reveal>
+    <a class="filter-btn{% if tab == 'progress' %} is-active" aria-current="page{% endif %}" href="{% url 'progress' %}">Обзор</a>
+    <a class="filter-btn{% if tab == 'history' %} is-active" aria-current="page{% endif %}" href="{% url 'history' %}">История</a>
+    <a class="filter-btn{% if tab == 'errors' %} is-active" aria-current="page{% endif %}" href="{% url 'errors' %}">Работа над ошибками</a>
+  </nav>
+</div>
