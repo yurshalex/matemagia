@@ -2,30 +2,30 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=1280">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#120d33">
   <title>Добро пожаловать · МатеМагия</title>
   <!-- Django-шаблон: home.html -->
   <link rel="icon" href="../static/img/logo_small.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../static/css/main.css">
 </head>
 <body>
+  <a class="skip-link" href="#main">К содержимому</a>
   <div class="sky" aria-hidden="true"></div>
 
   <header class="main-navbar">
     <a class="navbar-logo" href="home.html" aria-label="МатеМагия — на главную">
-      <img src="../static/img/logo_small.png" alt="" width="52" height="52">
+      <img src="../static/img/logo_small.png" alt="" width="48" height="48">
+      <span class="navbar-title">МатеМагия</span>
     </a>
     <span></span>
-    <div class="navbar-end">
+    <div class="navbar-end guest-actions">
       <a class="btn btn-outline btn-sm" href="users/auth_login.html">Войти</a>
       <a class="btn btn-primary btn-sm" href="users/register.html">Регистрация</a>
     </div>
   </header>
 
-  <main class="page">
+  <main id="main" class="page">
     <section class="welcome-banner">
       <div class="welcome-text">
         <span class="badge-pill" data-reveal>✦ Школа магии чисел · 5 класс</span>
