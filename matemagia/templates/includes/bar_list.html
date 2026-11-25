@@ -1,0 +1,6 @@
+{# Строки {topic, tasks_solved, tasks_correct, percent_correct}; цвет полосы ставит nav.js по data-percent #}
+<ul class="bar-list">
+  {% for row in rows %}
+  <li><span>{{ row.topic.title }}</span><div class="progress-bar" data-percent="{{ row.percent_correct|floatformat:0 }}"></div><span class="bar-value">{{ row.percent_correct|floatformat:0 }}%{% if suffix %} {{ suffix }}{% endif %}</span></li>
+  {% endfor %}
+</ul>

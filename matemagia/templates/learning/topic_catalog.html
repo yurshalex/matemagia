@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Книги заклинаний{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div data-reveal>
+    <h1 class="page-title"><span class="spark" aria-hidden="true">✦</span>Книги заклинаний</h1>
+    <p class="page-lead">Математика · {{ user.grade }} · выбери тему</p>
+  </div>
+  <div class="filter-bar" role="group" aria-label="Фильтр тем" data-reveal>
+    <button class="filter-btn is-active" type="button" data-filter="all" aria-pressed="true">Все</button>
+    <button class="filter-btn" type="button" data-filter="in_progress" aria-pressed="false">В процессе</button>
+    <button class="filter-btn" type="button" data-filter="new" aria-pressed="false">Новые</button>
+    <button class="filter-btn" type="button" data-filter="done" aria-pressed="false">Пройденные</button>
+  </div>
+</div>
+
+<section class="topics-grid" id="topics-grid" aria-live="polite">
+  {% for item in topics %}
+  <a class="card topic-card" href="{% url 'topic_detail' item.topic.id %}" data-status="{{ item.status_code }}" data-reveal>
+    <div class="topic-top">
+      <span class="topic-icon" aria-hidden="true">{% include "includes/topic_icon.html" with topic=item.topic %}</span>
+      <span class="status {% if item.status_code == 'done' %}status-done{% elif item.status_code == 'in_progress' %}status-progress{% else %}status-new{% endif %}">{{ item.status }}</span>
+    </div>
+    <h2>{{ item.topic.title }}</h2>
+    <p>{{ item.topic.description|default:"" }}</p>
+    <div class="progress-bar progress-sm{% if item.status_code == 'done' %} progress-bar-success{% endif %}"><span class="topic-progress-fill" style="width: {{ item.progress_percent }}%"></span></div>
+    <span class="topic-count">{{ item.tasks_done }} из {{ item.tasks_total }} верных заданий</span>
+  </a>
+  {% empty %}
+  <p class="empty-state">Темы пока не добавлены.</p>
+  {% endfor %}
+</section>
+<p class="empty-state" id="topics-empty" hidden>В этом разделе пока нет тем.</p>
+{% endblock %}
+{% block scripts %}<script src="{% static 'js/topic_filter.js' %}" defer></script>{% endblock %}

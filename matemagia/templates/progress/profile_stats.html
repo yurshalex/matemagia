@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Личный кабинет{% endblock %}
+{% block content %}
+<section class="card user-profile-card" data-reveal>
+  <div class="big-avatar"><span class="avatar">{{ profile_user.first_name|default:profile_user.username|first|upper }}</span><span class="hat" aria-hidden="true">✦</span></div>
+  <div>
+    <h1>{{ profile_user.first_name|default:profile_user.username }}</h1>
+    <p class="grade">{{ profile_user.grade }} · логин {{ profile_user.username }}</p>
+    {% if rank_info %}
+    <div class="profile-rank"><div class="hex hex-gold hex-sm" aria-hidden="true">★</div><span class="rank-name">{{ rank_info.rank }}</span><small>{{ rank_info.xp }}{% if rank_info.next_rank %} / {{ rank_info.xp|add:rank_info.xp_to_next }}{% endif %} опыта</small></div>
+    <div class="progress-bar"><span style="width: {{ rank_info.progress_percent }}%"></span></div>
+    {% endif %}
+  </div>
+  <a class="btn btn-outline" id="btn-ranks-achievements" href="{% url 'achievements' %}">Ранги и достижения</a>
+</section>
+
+<section class="stats-grid" aria-label="Сводные показатели">
+  <article class="card stat-card" data-reveal><small>Решено заданий</small><strong data-count="{{ stats.total|default:0 }}">{{ stats.total|default:0 }}</strong></article>
+  <article class="card stat-card" data-reveal><small>Процент верных</small><strong data-count="{{ stats.percent_correct|default:0|floatformat:0 }}" data-suffix="%">{{ stats.percent_correct|default:0|floatformat:0 }}%</strong></article>
+  <article class="card stat-card" data-reveal><small>Пройдено испытаний</small><strong data-count="{{ challenges_passed }}">{{ challenges_passed }}</strong></article>
+  <article class="card stat-card" data-reveal><small>Достижений</small><strong>{{ achievements.unlocked_count|default:0 }} / {{ achievements.total|default:0 }}</strong></article>
+</section>
+
+<section class="profile-grid">
+  <div class="profile-col">
+    <article class="card card-pad weak-spots-section" data-reveal>
+      <div class="widget-head">
+        <div><h2>Слабые места</h2><p>Меньше 60% верных — начни с них</p></div>
+        <a class="link-gold" id="link-fix-weak-spots" href="{% url 'errors' %}">Разобрать ошибки →</a>
+      </div>
+      {% if weak_topics %}{% include "includes/bar_list.html" with rows=weak_topics suffix="верно" %}
+      {% else %}<p class="empty-state">Слабых мест нет — так держать!</p>{% endif %}
+    </article>
+    <article class="card card-pad topics-progress-section" data-reveal>
+      <div class="widget-head">
+        <div><h2>Успеваемость по темам</h2><p>Процент верных ответов</p></div>
+        <a class="link-gold" href="{% url 'progress' %}">Подробнее →</a>
+      </div>
+      {% if topic_progress %}{% include "includes/bar_list.html" with rows=topic_progress %}
+      {% else %}<p class="empty-state">Реши первые задания — здесь появится успеваемость по темам.</p>{% endif %}
+    </article>
+  </div>
+
+  <article class="card card-pad recent-attempts-section" data-reveal>
+    <div class="widget-head"><div><h2>Последние попытки</h2><p>Тренировки и испытания</p></div><a class="link-gold" href="{% url 'history' %}">Вся история →</a></div>
+    <ul class="attempts">
+      {% for a in recent_attempts %}
+      <li><div><b>{{ a.task.condition|truncatechars:48 }}</b><small>{{ a.task.topic.title }} · {{ a.created_at|date:"d.m, H:i" }}</small></div>
+        {% if a.is_correct %}<span class="score score-badge-success">Верно{% if a.xp_earned %} +{{ a.xp_earned }}{% endif %}</span>{% else %}<span class="score score-badge-bad">Ошибка</span>{% endif %}</li>
+      {% empty %}
+      <li class="empty-state">Попыток пока нет. <a class="link-gold" href="{% url 'task_list' %}">Начать тренировку</a></li>
+      {% endfor %}
+    </ul>
+  </article>
+</section>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Добро пожаловать{% endblock %}
+{% block content %}
+<section class="welcome-banner">
+  <div class="welcome-text">
+    <span class="badge-pill" data-reveal>✦ Школа магии чисел · 5 класс</span>
+    <h1 class="hero-title" data-reveal>Добро пожаловать в <span class="text-gold">МатеМагию</span>!</h1>
+    <p class="hero-lead" data-reveal>Решай задания, открывай книги заклинаний и стань настоящим магом математики.</p>
+    <div class="hero-actions" data-reveal>
+      <a class="btn btn-primary btn-lg" href="{% url 'register' %}">Начать обучение</a>
+      <a class="btn btn-outline btn-lg" href="{% url 'login' %}">У меня есть аккаунт</a>
+    </div>
+  </div>
+  {% include "includes/logo_orbit.html" %}
+</section>
+<section class="features" aria-label="Что есть в МатеМагии">
+  <article class="card card-pad feature-card" data-reveal>
+    <div class="hex" aria-hidden="true">½</div>
+    <div><h2>Книги заклинаний</h2><p>Все темы 5 класса с теорией</p></div>
+  </article>
+  <article class="card card-pad feature-card" data-reveal>
+    <img src="{% static 'img/owl.svg' %}" alt="" width="48" height="48">
+    <div><h2>Мудрая сова</h2><p>Задания и разбор ошибок</p></div>
+  </article>
+  <article class="card card-pad feature-card" data-reveal>
+    <div class="hex hex-gold" aria-hidden="true">★</div>
+    <div><h2>Путь мага</h2><p>Опыт, ранги и награды</p></div>
+  </article>
+</section>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}{{ lesson.title }}{% endblock %}
+{% block main_class %}page theory-layout{% endblock %}
+{% block content %}
+<aside class="course-sidebar-wrap" data-reveal>
+  <a class="back-link" id="link-back-topics" href="{% url 'topic_detail' topic.id %}">← К теме «{{ topic.title }}»</a>
+  <nav class="card course-sidebar" aria-label="Уроки темы">
+    <h2>{{ topic.title }}</h2>
+    <div class="progress-bar progress-sm"><span style="width: {% widthratio number total 100 %}%"></span></div>
+    <p class="progress-hint">Урок {{ number }} из {{ total }}</p>
+    <ul class="lesson-nav">
+      {% for l in lessons %}
+      <li><a class="sidebar-lesson-item{% if l.id == lesson.id %} is-active{% endif %}" href="{% url 'theory' l.id %}"{% if l.id == lesson.id %} aria-current="page"{% endif %}>{{ forloop.counter }}. {{ l.title }}</a></li>
+      {% endfor %}
+      <li><hr></li>
+      <li><a class="sidebar-lesson-item" href="{% url 'task_list' %}?topic={{ topic.id }}">Тренажёр</a></li>
+    </ul>
+  </nav>
+</aside>
+
+<article class="paper theory-card" data-reveal>
+  <section class="theory-content">
+    <p class="lesson-header">Урок {{ number }} · {{ topic.title }}</p>
+    <h1>{{ lesson.title }}</h1>
+    <div class="lesson-body">{{ lesson.content|safe }}</div>
+  </section>
+  <div class="theory-actions">
+    {% if prev_id %}<a class="btn btn-light" href="{% url 'theory' prev_id %}">← Предыдущий урок</a>{% endif %}
+    {% if next_id %}<a class="btn btn-light" id="btn-next-lesson" href="{% url 'theory' next_id %}">Следующий урок →</a>{% endif %}
+    <a class="btn btn-violet" id="btn-go-to-tasks" href="{% url 'task_list' %}?topic={{ topic.id }}">Перейти к заданиям</a>
+  </div>
+</article>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Тренажёр{% endblock %}
+{% block content %}
+{% if task %}
+  {# Одно задание: /tasks/<id>/ — из истории и работы над ошибками #}
+  <a class="back-link" href="{% url 'errors' %}">← К работе над ошибками</a>
+  {% include "includes/task_card.html" with mode="single" heading="Задание" total=1 position=1 again_topic=task.topic_id done_url="/progress/errors/" %}
+
+{% elif "topic" in request.GET or "type" in request.GET %}
+  {# Серия из 10 заданий: /tasks/?topic=<id>&type=<формат>; задания подгружает task_check.js #}
+  <a class="back-link" href="{% url 'task_list' %}">← Выбрать другую тренировку</a>
+  {% for t in topics %}{% if t.id == series.topic %}{% include "includes/task_card.html" with mode="series" heading=t.title again_url=request.get_full_path %}{% endif %}{% endfor %}
+  {% if not series.topic %}{% include "includes/task_card.html" with mode="series" heading="Все темы" again_url=request.get_full_path %}{% endif %}
+
+{% else %}
+  {# Выбор тренировки #}
+  <div class="page-head">
+    <div data-reveal>
+      <h1 class="page-title"><span class="spark" aria-hidden="true">✦</span>Тренажёр</h1>
+      <p class="page-lead">Выбери тему и формат — получишь серию из 10 заданий.</p>
+    </div>
+  </div>
+  <form class="card trainer-setup" action="{% url 'task_list' %}" method="get" data-reveal>
+    <div class="field">
+      <label for="task-topic">Тема</label>
+      <select name="topic" id="task-topic">
+        <option value="">Все темы вперемешку</option>
+        {% for t in topics %}<option value="{{ t.id }}">{{ t.title }}</option>{% endfor %}
+      </select>
+    </div>
+    <fieldset class="format-grid">
+      <legend>Формат заданий</legend>
+      <label class="format-card"><input type="radio" name="type" value="" checked><span class="hex hex-sm" aria-hidden="true">∗</span><b>Все форматы</b><small>Вперемешку</small></label>
+      {% for value, label in task_types %}
+      <label class="format-card"><input type="radio" name="type" value="{{ value }}"><span class="hex hex-sm" aria-hidden="true">{% if value == "choice" %}◉{% elif value == "input" %}✎{% elif value == "boolean" %}✓{% elif value == "ordering" %}⇅{% else %}⇄{% endif %}</span><b>{{ label }}</b><small>{% if value == "choice" %}Один верный вариант{% elif value == "input" %}Число или дробь{% elif value == "boolean" %}Проверь утверждение{% elif value == "ordering" %}Расставь по порядку{% else %}Найди пары{% endif %}</small></label>
+      {% endfor %}
+    </fieldset>
+    <div class="setup-foot">
+      <p class="setup-note">10 заданий · опыт за верный ответ с первой попытки · бонус за серию от 3 подряд</p>
+      <button class="btn btn-primary btn-lg" type="submit">Начать тренировку</button>
+    </div>
+  </form>
+{% endif %}
+{% endblock %}
+{% block scripts %}{% if task or "topic" in request.GET or "type" in request.GET %}<script src="{% static 'js/task_check.js' %}" defer></script>{% endif %}{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Вход{% endblock %}
+{% block header %}{% endblock %}
+{% block main_class %}auth-page{% endblock %}
+{% block content %}
+{% include "includes/auth_hero.html" %}
+<section class="auth-card card" aria-labelledby="auth-title" data-reveal>
+  <nav class="auth-tabs" data-active="login" aria-label="Вход или регистрация">
+    <a id="tab-login" href="{% url 'login' %}" class="is-active" aria-current="page">Вход</a>
+    <a id="tab-register" href="{% url 'register' %}">Регистрация</a>
+  </nav>
+  <h1 id="auth-title" class="auth-title">С возвращением, маг!</h1>
+
+  <form class="auth-form" id="login-form" method="post" action="{% url 'login' %}" novalidate>
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{{ next }}">
+    {# Общая ошибка формы приходит под ключом "__all__"; в шаблоне к нему нельзя обратиться через точку #}
+    <div class="form-alert" id="form-alert" role="alert"{% if not errors %} hidden{% endif %}>{% for k, v in errors.items %}{% if k == "__all__" %}{{ v }}{% endif %}{% endfor %}</div>
+    {% include "includes/field.html" with name="username" label="Логин" value=values.username error=errors.username placeholder="Например, alisa5" autocomplete="username" %}
+    {% include "includes/field.html" with name="password" label="Пароль" type="password" error=errors.password placeholder="Волшебное слово" autocomplete="current-password" %}
+    <button type="submit" id="btn-submit-login" class="btn btn-primary btn-block btn-lg">Войти в мир магии</button>
+  </form>
+
+  <div class="auth-links">
+    <details class="password-reset">
+      <summary id="link-password-reset">Забыл пароль?</summary>
+      <p>Попроси учителя сбросить пароль в панели управления.</p>
+    </details>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}<script src="{% static 'js/auth.js' %}" defer></script>{% endblock %}

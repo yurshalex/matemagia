@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}История решений{% endblock %}
+{% block content %}
+{% include "includes/stats_tabs.html" with title="История решений" tab="history" %}
+<section class="card table-card" data-reveal>
+  {% if history.attempts %}
+  <div class="table-scroll">
+    <table class="history-table">
+      <thead><tr><th>Когда</th><th>Тема</th><th>Задание</th><th>Формат</th><th>Результат</th><th class="num">Опыт</th><th><span class="sr-only">Разбор</span></th></tr></thead>
+      <tbody>
+        {% for a in history.attempts %}
+        <tr>
+          <td>{{ a.created_at|date:"d.m.Y, H:i" }}</td>
+          <td>{{ a.task.topic.title }}</td>
+          <td>{{ a.task.condition|truncatechars:60 }}</td>
+          <td>{{ a.task.get_task_type_display }}</td>
+          <td>{% if a.is_correct %}<span class="score score-badge-success">Верно</span>{% else %}<span class="score score-badge-bad">Ошибка</span>{% endif %}</td>
+          <td class="num">{% if a.xp_earned %}+{{ a.xp_earned }}{% else %}—{% endif %}</td>
+          <td><a class="link-gold" href="{% url 'task_detail' a.task_id %}">Решить ещё</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% if history.num_pages > 1 %}
+  <nav class="pagination" aria-label="Страницы истории">
+    {% if history.has_previous %}<a class="page-btn" href="?page={{ history.previous_page }}" aria-label="Предыдущая страница">←</a>{% else %}<span class="page-btn is-disabled" aria-hidden="true">←</span>{% endif %}
+    <span class="page-btn is-active" aria-current="page">{{ history.page }}</span>
+    <span class="page-of">из {{ history.num_pages }}</span>
+    {% if history.has_next %}<a class="page-btn" href="?page={{ history.next_page }}" aria-label="Следующая страница">→</a>{% else %}<span class="page-btn is-disabled" aria-hidden="true">→</span>{% endif %}
+  </nav>
+  {% endif %}
+  {% else %}
+  <p class="empty-state empty-pad">Решений пока нет. <a class="link-gold" href="{% url 'task_list' %}">Начать тренировку</a></p>
+  {% endif %}
+</section>
+{% endblock %}

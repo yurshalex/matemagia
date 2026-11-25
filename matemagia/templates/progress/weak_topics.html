@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Работа над ошибками{% endblock %}
+{% block content %}
+{% include "includes/stats_tabs.html" with title="Работа над ошибками" tab="errors" %}
+<div class="progress-grid">
+  <section class="card card-pad weak-spots-section" data-reveal>
+    <div class="widget-head"><div><h2>Слабые места</h2><p>Меньше 60% верных при 3 попытках и больше</p></div></div>
+    {% if weak_topics %}
+    <ul class="weak-cards">
+      {% for row in weak_topics %}
+      <li>
+        <div class="weak-card-head"><strong>{{ row.topic.title }}</strong><span class="bar-value">{{ row.percent_correct|floatformat:0 }}% верно</span></div>
+        <div class="progress-bar" data-percent="{{ row.percent_correct|floatformat:0 }}"></div>
+        <div class="weak-card-actions"><a class="btn btn-sm btn-outline" href="{% url 'topic_detail' row.topic.id %}">Повторить теорию</a><a class="btn btn-sm btn-primary" href="{% url 'task_list' %}?topic={{ row.topic.id }}">Тренировать</a></div>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}<p class="empty-state">Слабых мест нет — так держать!</p>{% endif %}
+  </section>
+  <section class="card card-pad" data-reveal>
+    <div class="widget-head"><div><h2>Задания для повторения</h2><p>Последний ответ был неверным</p></div></div>
+    <ul class="attempts">
+      {% for t in error_tasks %}
+      <li><div><b>{{ t.condition|truncatechars:60 }}</b><small>{{ t.topic.title }} · {{ t.get_task_type_display|lower }}</small></div><a class="btn btn-outline btn-sm" href="{% url 'task_detail' t.id %}">Решить</a></li>
+      {% empty %}
+      <li class="empty-state">Ошибок нет — все задания решены верно.</li>
+      {% endfor %}
+    </ul>
+    <p class="progress-hint">Исправь ошибку — получишь достижение «Работа над ошибками».</p>
+  </section>
+</div>
+{% endblock %}
