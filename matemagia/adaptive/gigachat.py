@@ -106,6 +106,18 @@ class GigaChatClient:
         kind = params["task_type"]
         if kind not in formats:
             raise ValueError("Неизвестный тип задания")
+
+        excluded = params.get("avoid_conditions", [])
+        avoid_text = ""
+
+        if excluded:
+            avoid_text = (
+                " Не повторяй следующие уже существующие задания: "
+                + " | ".join(excluded)
+                + ". Придумай другое задание по той же теме и строго "
+                  "в том же формате, с новыми числами и условием."
+            )
+
         return (
             f"Ты составляешь ровно ОДНО корректное задание по математике для {params['grade']} класса. "
             f"Тема: {params['topic_title']}. Сложность: {params['difficulty_level']} из 3. "
@@ -114,7 +126,8 @@ class GigaChatClient:
             "Обязательные поля: task_type, condition, content_payload, correct_answer, explanation, difficulty_level. "
             f"task_type строго {kind}; difficulty_level строго {params['difficulty_level']}. "
             "condition и explanation должны быть понятны пятикласснику, а ответ математически верным. "
-            "Не добавляй вопросы, которые требуют изображения или внешних материалов."
+            "Не добавляй вопросы, которые требуют изображения или внешних материалов. "
+            f"{avoid_text}"
         )
 
     @staticmethod

@@ -139,7 +139,18 @@ class AdaptiveService:
 
     def generate_task(self, topic, task_type, difficulty):
         params = self.build_generation_params(topic, difficulty, task_type)
-        attempts = 2 if task_type == "matching" else 1
+
+        # Получаем последние 20 заданий этой темы и формата.
+        params["avoid_conditions"] = list(
+            Task.objects.filter(
+                topic=topic,
+                task_type=task_type,
+            )
+            .order_by("-id")
+            .values_list("condition", flat=True)[:20]
+        )
+
+        attempts = 3
 
         for _ in range(attempts):
             response = self.client.request_generation(params)
@@ -147,28 +158,32 @@ class AdaptiveService:
                 return response
 
             checked = self.validate_generated_task(response.data, params)
-            if checked.ok:
+            if not checked.ok:
+                continue
+
+            # Не сохраняем задания с одинаковыми условиями.
+            duplicate = Task.objects.filter(
+                topic=topic,
+                condition=checked.data["condition"],
+            ).exists()
+
+            if not duplicate:
                 break
         else:
-            return checked
-
-        # Не сохраняем повторно одинаковые ИИ-задания.
-        duplicate = Task.objects.filter(
-            is_ai_generated=True,
-            topic=topic,
-            condition=checked.data["condition"],
-        ).exists()
-
-        if duplicate:
             return ServiceResult.fail(
                 ResultCode.AI_INVALID_RESPONSE,
-                {"gigachat": "Такое ИИ-задание уже существует"},
+                {"gigachat": "Не удалось получить новое корректное задание"},
             )
 
         try:
             task = Task.objects.create(**checked.data)
             return ServiceResult.success(task)
         except DatabaseError:
+            logger.exception("Ошибка сохранения сгенерированного задания")
+            return ServiceResult.fail(
+                ResultCode.INTERNAL_ERROR,
+                {"task": "Ошибка сохранения задания"},
+            )
             logger.exception("Ошибка сохранения сгенерированного задания")
             return ServiceResult.fail(ResultCode.INTERNAL_ERROR, {"task": "Ошибка сохранения задания"})
 
@@ -184,7 +199,10 @@ class AdaptiveService:
             levels.append({"task_type": task_type})
         elif difficulty is not None:
             levels.append({"difficulty_level": difficulty})
-        levels.append({})
+
+        if not task_type:
+            levels.append({})
+
         for filters in levels:
             task = base.filter(**filters).order_by("?").first()
             if task:

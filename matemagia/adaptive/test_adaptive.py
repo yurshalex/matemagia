@@ -55,16 +55,25 @@ class AdaptiveServiceTests(TestCase):
         self.assertTrue(result.data.is_ai_generated)
         self.assertNotIn("correct_answer", __import__("tests.services", fromlist=["TaskService"]).TaskService.serialize_task(result.data))
 
-    def test_invalid_generation_uses_prepared_task(self):
+    def test_invalid_generation_does_not_mix_formats(self):
         self.client.request_generation.return_value = ServiceResult.success({
-            "task_type": "choice", "condition": "Сколько будет 2+2?",
+            "task_type": "choice",
+            "condition": "Сколько будет 2+2?",
             "content_payload": {"options": ["3", "4"]},
-            "correct_answer": "5", "explanation": "Ошибка", "difficulty_level": 1,
+            "correct_answer": "5",
+            "explanation": "Ошибка",
+            "difficulty_level": 1,
         })
-        result = self.service.pick_next_task(self.user, self.topic.pk, "choice", 1)
-        self.assertTrue(result.ok)
-        self.assertEqual(result.data.pk, self.task.pk)
-        self.assertFalse(result.data.is_ai_generated)
+
+        result = self.service.pick_next_task(
+            self.user, self.topic.pk, "choice", 1
+        )
+
+        self.assertFalse(result.ok)
+        self.assertEqual(
+            result.code,
+            ResultCode.NO_TASKS_AVAILABLE
+        )
 
     def test_fallback_does_not_repeat_task(self):
         result = self.service.get_fallback_task(self.topic.pk, "input", 1, [self.task.pk])
