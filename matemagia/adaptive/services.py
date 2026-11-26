@@ -3,6 +3,8 @@
 import json
 import logging
 import random
+import re
+from fractions import Fraction
 
 from django.db import DatabaseError
 
@@ -123,7 +125,190 @@ class AdaptiveService:
             ):
                 raise ValueError("Словесная запись числа требует отдельной проверки")
 
-            answer = self._normalize_answer(kind, payload, data["correct_answer"])
+            answer = self._normalize_answer(
+                kind, payload, data["correct_answer"]
+            )
+
+            # Независимо проверяем простые арифметические задания.
+            if kind in ("choice", "input"):
+                match = re.fullmatch(
+                    r"\s*Сколько будет\s*"
+                    r"([+-]?\d+)\s*([+\-−*×÷:])\s*"
+                    r"([+-]?\d+)\s*\?\s*",
+                    condition,
+                    flags=re.IGNORECASE,
+                )
+
+                if match:
+                    left = Fraction(int(match.group(1)))
+                    operator = match.group(2)
+                    right = Fraction(int(match.group(3)))
+
+                    if operator == "+":
+                        expected = left + right
+                    elif operator in ("-", "−"):
+                        expected = left - right
+                    elif operator in ("*", "×"):
+                        expected = left * right
+                    else:
+                        expected = left / right
+
+                    actual = AnswerChecker.normalize_number(answer)
+
+                    if actual != expected:
+                        raise ValueError(
+                            "Математически неверный ответ GigaChat"
+                        )
+
+            # Проверяем задания на выбор дроби, равной числу.
+            if kind == "choice":
+                fraction_match = re.fullmatch(
+                    r"\s*Выберите\s+дробь,\s+равную\s+числу\s+"
+                    r"([+-]?\d+(?:[.,]\d+)?)\s*[.!?]?\s*",
+                    condition,
+                    flags=re.IGNORECASE,
+                )
+
+                if fraction_match:
+                    target = AnswerChecker.normalize_number(
+                        fraction_match.group(1)
+                    )
+
+                    # Самостоятельно вычисляем значения всех вариантов.
+                    correct_options = [
+                        option
+                        for option in payload["options"]
+                        if AnswerChecker.normalize_number(option) == target
+                    ]
+
+                    # Правильный вариант должен быть ровно один.
+                    if (
+                        len(correct_options) != 1
+                        or answer != correct_options[0]
+                    ):
+                        raise ValueError(
+                            "Неверный или неоднозначный ответ GigaChat"
+                        )
+
+
+            # Проверяем правильность упорядочивания выражений.
+            if kind == "ordering":
+                if "возрастан" in condition.lower():
+                    reverse = False
+                elif "убыван" in condition.lower():
+                    reverse = True
+                else:
+                    raise ValueError(
+                        "Неизвестное направление упорядочивания"
+                    )
+
+                values = {}
+
+                for item in payload["items"]:
+                    # Поддерживаем простые выражения с двумя целыми числами.
+                    match = re.fullmatch(
+                        r"\s*([+-]?\d+)\s*([+\-−*×÷:])\s*"
+                        r"([+-]?\d+)\s*",
+                        item,
+                    )
+
+                    if not match:
+                        raise ValueError(
+                            "Не удалось проверить выражение"
+                        )
+
+                    left = Fraction(int(match.group(1)))
+                    operator = match.group(2)
+                    right = Fraction(int(match.group(3)))
+
+                    if operator == "+":
+                        value = left + right
+                    elif operator in ("-", "−"):
+                        value = left - right
+                    elif operator in ("*", "×"):
+                        value = left * right
+                    else:
+                        if right == 0:
+                            raise ValueError("Деление на ноль")
+                        value = left / right
+
+                    values[item] = value
+
+                # Одинаковые результаты делают порядок неоднозначным.
+                if len(set(values.values())) != len(values):
+                    raise ValueError(
+                        "У выражений повторяются результаты"
+                    )
+
+                expected_order = sorted(
+                    payload["items"],
+                    key=lambda item: values[item],
+                    reverse=reverse,
+                )
+
+                actual_order = json.loads(answer)
+
+                if actual_order != expected_order:
+                    raise ValueError(
+                        "Неправильный порядок выражений GigaChat"
+                    )
+
+
+            # Проверяем правильность сопоставления выражений и результатов.
+            if kind == "matching":
+                mapping = json.loads(answer)
+
+                # ИИ может вернуть словарь или список пар.
+                if isinstance(mapping, list):
+                    mapping = dict(mapping)
+
+                seen_results = set()
+
+                for expression, selected_result in mapping.items():
+                    match = re.fullmatch(
+                        r"\s*([+-]?\d+)\s*([+\-−*×÷:])\s*"
+                        r"([+-]?\d+)\s*",
+                        expression,
+                    )
+
+                    if not match:
+                        raise ValueError(
+                            "Не удалось проверить выражение сопоставления"
+                        )
+
+                    left = Fraction(int(match.group(1)))
+                    operator = match.group(2)
+                    right = Fraction(int(match.group(3)))
+
+                    if operator == "+":
+                        expected = left + right
+                    elif operator in ("-", "−"):
+                        expected = left - right
+                    elif operator in ("*", "×"):
+                        expected = left * right
+                    else:
+                        if right == 0:
+                            raise ValueError("Деление на ноль")
+                        expected = left / right
+
+                    actual = AnswerChecker.normalize_number(
+                        selected_result
+                    )
+
+                    if actual != expected:
+                        raise ValueError(
+                            "Неправильное соответствие GigaChat"
+                        )
+
+                    # Не допускаем неоднозначных соответствий.
+                    if expected in seen_results:
+                        raise ValueError(
+                            "У выражений повторяются результаты"
+                        )
+
+                    seen_results.add(expected)
+
+
             return ServiceResult.success({
                 "topic_id": params["topic_id"],
                 "task_type": kind,

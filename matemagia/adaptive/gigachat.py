@@ -15,7 +15,11 @@ logger = logging.getLogger(__name__)
 
 class GigaChatClient:
     AUTH_URL = "https://ngw.devices.sberbank.ru:9443/api/v2/oauth"
-    CHAT_URL = "https://api.giga.chat/v1/chat/completions"
+    CHAT_URL = getattr(
+    settings,
+    "GIGACHAT_CHAT_URL",
+    "https://api.giga.chat/v1/chat/completions",
+)
 
     def __init__(self, session=None):
         self.session = session or requests.Session()
@@ -61,7 +65,13 @@ class GigaChatClient:
                     expiry_time /= 1000
             self._token, self._expires_at = token, expiry_time
             return ServiceResult.success(token)
-        except (requests.RequestException, ValueError, KeyError, TypeError) as exc:
+        except (
+            requests.RequestException,
+            OSError,
+            ValueError,
+            KeyError,
+            TypeError,
+        ) as exc:
             logger.warning("GigaChat OAuth недоступен: %s", type(exc).__name__)
             self._token, self._expires_at = None, 0.0
             return ServiceResult.fail(ResultCode.AI_UNAVAILABLE, {"gigachat": "Ошибка авторизации GigaChat"})
@@ -174,7 +184,7 @@ class GigaChatClient:
                 verify=self.verify,
             )
             response.raise_for_status()
-        except requests.RequestException as exc:
+        except (requests.RequestException, OSError) as exc:
             logger.warning("GigaChat запрос недоступен: %s", type(exc).__name__)
             return ServiceResult.fail(ResultCode.AI_UNAVAILABLE, {"gigachat": "Ошибка обращения к GigaChat"})
         try:
