@@ -7,7 +7,7 @@
     <h1>{{ profile_user.first_name|default:profile_user.username }}</h1>
     <p class="grade">{{ profile_user.grade }} · логин {{ profile_user.username }}</p>
     {% if rank_info %}
-    <div class="profile-rank"><div class="hex hex-gold hex-sm" aria-hidden="true">★</div><span class="rank-name">{{ rank_info.rank }}</span><small>{{ rank_info.xp }}{% if rank_info.next_rank %} / {{ rank_info.xp|add:rank_info.xp_to_next }}{% endif %} опыта</small></div>
+    <div class="profile-rank">{% include "includes/rank_crystal.html" with size="sm" %}<span class="rank-name">{{ rank_info.rank }}</span><small>{{ rank_info.xp }}{% if rank_info.next_rank %} / {{ rank_info.xp|add:rank_info.xp_to_next }}{% endif %} опыта</small></div>
     <div class="progress-bar"><span style="width: {{ rank_info.progress_percent }}%"></span></div>
     {% endif %}
   </div>

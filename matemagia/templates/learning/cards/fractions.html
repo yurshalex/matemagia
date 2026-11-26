@@ -1,0 +1,135 @@
+{# Карточки теории: «Дроби». Модели — static/js/theory_cards.js #}
+<div class="tc-deck">
+{% if lesson.order == 1 %}
+  <section class="tc-card tc-card-rule">
+    <header class="tc-head"><span class="tc-tag">Правило</span><h2>Из чего состоит дробь</h2></header>
+    <div class="tc-frac-anatomy">
+      <span class="frac tc-frac-xl"><span>3</span><span>8</span></span>
+      <dl>
+        <div><dt>Числитель — 3</dt><dd>сколько частей взяли</dd></div>
+        <div><dt>Черта</dt><dd>знак деления: 3 : 8</dd></div>
+        <div><dt>Знаменатель — 8</dt><dd>на сколько равных частей разделили целое</dd></div>
+      </dl>
+    </div>
+  </section>
+  <section class="tc-card">
+    <header class="tc-head"><span class="tc-tag is-try">Попробуй сам</span><h2>Режем пиццу</h2></header>
+    <div data-widget="fraction" data-num="3" data-den="8"></div>
+  </section>
+  <section class="tc-card tc-quiz" data-answer="b" data-explain="Пирог разделили на 6 частей (знаменатель), съели 5 (числитель)." data-hint="знаменатель — на сколько частей разделили.">
+    <header class="tc-head"><span class="tc-tag is-check">Проверь себя</span><h2>Пирог разрезали на 6 равных кусков и съели 5. Какую часть съели?</h2></header>
+    <div class="tc-quiz-opts">
+      <button class="tc-quiz-opt" type="button" data-value="a"><span class="frac"><span>6</span><span>5</span></span></button>
+      <button class="tc-quiz-opt" type="button" data-value="b"><span class="frac"><span>5</span><span>6</span></span></button>
+      <button class="tc-quiz-opt" type="button" data-value="c"><span class="frac"><span>1</span><span>6</span></span></button>
+    </div>
+    <p class="tc-quiz-note" hidden></p>
+  </section>
+  <div class="remember"><h3>Запомни!</h3><p>Знаменатель — внизу, числитель — наверху. Части должны быть <b>равными</b>.</p></div>
+
+{% elif lesson.order == 2 %}
+  <section class="tc-card tc-card-rule">
+    <header class="tc-head"><span class="tc-tag">Правило</span><h2>Правильные и неправильные</h2></header>
+    <div class="tc-props">
+      <div><small>Правильная</small><p class="tc-formula"><span class="frac"><span>3</span><span>5</span></span> &lt; 1</p><p class="tc-small">числитель меньше знаменателя</p></div>
+      <div><small>Неправильная</small><p class="tc-formula"><span class="frac"><span>7</span><span>5</span></span> &gt; 1, <span class="frac"><span>5</span><span>5</span></span> = 1</p><p class="tc-small">числитель больше или равен знаменателю</p></div>
+    </div>
+  </section>
+  <section class="tc-card">
+    <header class="tc-head"><span class="tc-tag is-try">Попробуй сам</span><h2>Сделай дробь больше целого</h2></header>
+    <div data-widget="fraction" data-num="7" data-den="5" data-classify></div>
+  </section>
+  <section class="tc-card tc-quiz" data-answer="c" data-explain="У 9/9 числитель равен знаменателю — это неправильная дробь, равная 1." data-hint="сравни числитель и знаменатель.">
+    <header class="tc-head"><span class="tc-tag is-check">Проверь себя</span><h2>Какая дробь неправильная?</h2></header>
+    <div class="tc-quiz-opts">
+      <button class="tc-quiz-opt" type="button" data-value="a"><span class="frac"><span>2</span><span>9</span></span></button>
+      <button class="tc-quiz-opt" type="button" data-value="b"><span class="frac"><span>8</span><span>9</span></span></button>
+      <button class="tc-quiz-opt" type="button" data-value="c"><span class="frac"><span>9</span><span>9</span></span></button>
+    </div>
+    <p class="tc-quiz-note" hidden></p>
+  </section>
+  <div class="remember"><h3>Запомни!</h3><p>Правильная дробь всегда меньше 1, неправильная — больше или равна 1.</p></div>
+
+{% elif lesson.order == 3 %}
+  <section class="tc-card tc-card-rule">
+    <header class="tc-head"><span class="tc-tag">Правило</span><h2>Сравнение дробей</h2></header>
+    <ol class="tc-list">
+      <li>Знаменатели одинаковые — больше та дробь, у которой больше числитель.</li>
+      <li>Числители одинаковые — больше та, у которой <b>меньше</b> знаменатель (куски крупнее).</li>
+      <li>Всё разное — приводим к общему знаменателю.</li>
+    </ol>
+  </section>
+  <section class="tc-card">
+    <header class="tc-head"><span class="tc-tag is-try">Попробуй сам</span><h2>Какая полоска длиннее?</h2></header>
+    <div data-widget="frac-compare" data-a="3" data-b="4" data-x="2" data-y="3"></div>
+  </section>
+  <section class="tc-card tc-quiz" data-answer="a" data-explain="Числители равны, а у 1/3 куски крупнее: 1/3 > 1/5." data-hint="представь: пиццу делят на 3 человек или на 5 — у кого кусок больше?">
+    <header class="tc-head"><span class="tc-tag is-check">Проверь себя</span><h2>Что больше: <span class="frac"><span>1</span><span>3</span></span> или <span class="frac"><span>1</span><span>5</span></span>?</h2></header>
+    <div class="tc-quiz-opts">
+      <button class="tc-quiz-opt" type="button" data-value="a"><span class="frac"><span>1</span><span>3</span></span></button>
+      <button class="tc-quiz-opt" type="button" data-value="b"><span class="frac"><span>1</span><span>5</span></span></button>
+      <button class="tc-quiz-opt" type="button" data-value="c">Они равны</button>
+    </div>
+    <p class="tc-quiz-note" hidden></p>
+  </section>
+  <div class="remember"><h3>Запомни!</h3><p>Чем больше знаменатель, тем мельче каждая доля.</p></div>
+
+{% elif lesson.order == 4 %}
+  <section class="tc-card tc-card-rule">
+    <header class="tc-head"><span class="tc-tag">Правило</span><h2>Сложение дробей</h2></header>
+    <p class="tc-formula"><span class="frac"><span>a</span><span>n</span></span> + <span class="frac"><span>b</span><span>n</span></span> = <span class="frac"><span>a + b</span><span>n</span></span></p>
+    <p>Складываем <b>только числители</b>, знаменатель остаётся тем же: доли не меняют размер.</p>
+  </section>
+  <section class="tc-card">
+    <header class="tc-head"><span class="tc-tag is-try">Попробуй сам</span><h2>Складываем доли</h2></header>
+    <div data-widget="frac-add" data-den="8" data-a="3" data-b="4"></div>
+  </section>
+  <section class="tc-card">
+    <header class="tc-head"><span class="tc-tag is-example">Пример</span><h2>Разные знаменатели: <span class="frac"><span>1</span><span>2</span></span> + <span class="frac"><span>1</span><span>3</span></span></h2></header>
+    <ol class="tc-steps">
+      <li>Общий знаменатель — число, которое делится и на 2, и на 3: <b>6</b>.</li>
+      <li><span class="frac"><span>1</span><span>2</span></span> = <span class="frac"><span>3</span><span>6</span></span> (умножили числитель и знаменатель на 3).</li>
+      <li><span class="frac"><span>1</span><span>3</span></span> = <span class="frac"><span>2</span><span>6</span></span> (умножили на 2).</li>
+      <li><span class="frac"><span>3</span><span>6</span></span> + <span class="frac"><span>2</span><span>6</span></span> = <b><span class="frac"><span>5</span><span>6</span></span></b></li>
+    </ol>
+  </section>
+  <section class="tc-card tc-quiz" data-answer="b" data-explain="2/9 + 5/9 = 7/9: знаменатель тот же, числители сложили." data-hint="знаменатели складывать не нужно.">
+    <header class="tc-head"><span class="tc-tag is-check">Проверь себя</span><h2><span class="frac"><span>2</span><span>9</span></span> + <span class="frac"><span>5</span><span>9</span></span> = ?</h2></header>
+    <div class="tc-quiz-opts">
+      <button class="tc-quiz-opt" type="button" data-value="a"><span class="frac"><span>7</span><span>18</span></span></button>
+      <button class="tc-quiz-opt" type="button" data-value="b"><span class="frac"><span>7</span><span>9</span></span></button>
+      <button class="tc-quiz-opt" type="button" data-value="c"><span class="frac"><span>10</span><span>9</span></span></button>
+    </div>
+    <p class="tc-quiz-note" hidden></p>
+  </section>
+  <div class="remember"><h3>Запомни!</h3><p>Знаменатели <b>никогда</b> не складывают — только числители.</p></div>
+
+{% else %}
+  <section class="tc-card tc-card-rule">
+    <header class="tc-head"><span class="tc-tag">Правило</span><h2>Вычитание дробей</h2></header>
+    <p class="tc-formula"><span class="frac"><span>a</span><span>n</span></span> − <span class="frac"><span>b</span><span>n</span></span> = <span class="frac"><span>a − b</span><span>n</span></span></p>
+    <p>Как при сложении: общий знаменатель, затем вычитаем числители.</p>
+  </section>
+  <section class="tc-card">
+    <header class="tc-head"><span class="tc-tag is-try">Попробуй сам</span><h2>Убираем доли</h2></header>
+    <div data-widget="frac-add" data-op="-" data-den="8" data-a="6" data-b="2"></div>
+  </section>
+  <section class="tc-card">
+    <header class="tc-head"><span class="tc-tag is-example">Пример</span><h2>Из целого: 1 − <span class="frac"><span>3</span><span>7</span></span></h2></header>
+    <ol class="tc-steps">
+      <li>Представим 1 как дробь со знаменателем 7: 1 = <span class="frac"><span>7</span><span>7</span></span>.</li>
+      <li><span class="frac"><span>7</span><span>7</span></span> − <span class="frac"><span>3</span><span>7</span></span> = <b><span class="frac"><span>4</span><span>7</span></span></b></li>
+    </ol>
+  </section>
+  <section class="tc-card tc-quiz" data-answer="a" data-explain="11/12 − 5/12 = 6/12 = 1/2." data-hint="вычти числители, а потом попробуй сократить.">
+    <header class="tc-head"><span class="tc-tag is-check">Проверь себя</span><h2><span class="frac"><span>11</span><span>12</span></span> − <span class="frac"><span>5</span><span>12</span></span> = ?</h2></header>
+    <div class="tc-quiz-opts">
+      <button class="tc-quiz-opt" type="button" data-value="a"><span class="frac"><span>1</span><span>2</span></span></button>
+      <button class="tc-quiz-opt" type="button" data-value="b"><span class="frac"><span>6</span><span>0</span></span></button>
+      <button class="tc-quiz-opt" type="button" data-value="c"><span class="frac"><span>16</span><span>12</span></span></button>
+    </div>
+    <p class="tc-quiz-note" hidden></p>
+  </section>
+  <div class="remember"><h3>Запомни!</h3><p>1 можно записать дробью с любым знаменателем: 1 = <span class="frac"><span>2</span><span>2</span></span> = <span class="frac"><span>5</span><span>5</span></span> = <span class="frac"><span>9</span><span>9</span></span>.</p></div>
+{% endif %}
+</div>

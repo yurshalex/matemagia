@@ -15,7 +15,7 @@
   {% if rank_info %}
   <article class="card challenge-rank-card" data-reveal>
     <div class="rank-head">
-      <div class="hex hex-gold hex-sm" aria-hidden="true">★</div>
+      {% include "includes/rank_crystal.html" with size="sm" %}
       <div><p class="widget-label">Текущий ранг</p><h2 class="rank-name">{{ rank_info.rank }}</h2></div>
     </div>
     <div class="progress-bar progress-sm"><span style="width: {{ rank_info.progress_percent }}%"></span></div>

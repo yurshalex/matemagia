@@ -1,0 +1,92 @@
+{# Карточки теории: «Натуральные числа». Модели — static/js/theory_cards.js #}
+<div class="tc-deck">
+{% if lesson.order == 1 %}
+  <section class="tc-card tc-card-rule">
+    <header class="tc-head"><span class="tc-tag">Правило</span><h2>Разряды и классы</h2></header>
+    <p>Справа налево цифры стоят в разрядах <b>единиц</b>, <b>десятков</b> и <b>сотен</b>. Три разряда образуют <b>класс</b>: класс единиц, класс тысяч, класс миллионов.</p>
+    <p class="tc-formula">4 <span class="tc-hl">507</span> 239 — «четыре миллиона пятьсот семь тысяч двести тридцать девять»</p>
+    <p class="tc-small">Между классами в записи оставляют небольшой пробел — так число легче прочитать.</p>
+  </section>
+  <section class="tc-card">
+    <header class="tc-head"><span class="tc-tag is-try">Попробуй сам</span><h2>Разложи число по разрядам</h2></header>
+    <div data-widget="place-value" data-value="4507239"></div>
+  </section>
+  <section class="tc-card">
+    <header class="tc-head"><span class="tc-tag is-cards">Карточки</span><h2>Нажми, чтобы перевернуть</h2></header>
+    <div class="tc-flips">
+      <button class="tc-flip" type="button" aria-pressed="false"><span class="tc-flip-front">Сколько единиц в 1 тысяче?</span><span class="tc-flip-back">1 000 единиц — это 10 сотен или 100 десятков</span></button>
+      <button class="tc-flip" type="button" aria-pressed="false"><span class="tc-flip-front">Что означает цифра 0 в числе 305?</span><span class="tc-flip-back">Десятков нет: 305 = 3 сотни + 5 единиц</span></button>
+      <button class="tc-flip" type="button" aria-pressed="false"><span class="tc-flip-front">Сколько цифр в самом маленьком семизначном числе?</span><span class="tc-flip-back">Семь: 1 000 000 — один миллион</span></button>
+    </div>
+  </section>
+  <section class="tc-card tc-quiz" data-answer="b" data-explain="7 стоит в разряде единиц тысяч: 7 000." data-hint="найди класс тысяч — это средняя тройка цифр.">
+    <header class="tc-head"><span class="tc-tag is-check">Проверь себя</span><h2>Что означает цифра 7 в числе 4 507 239?</h2></header>
+    <div class="tc-quiz-opts">
+      <button class="tc-quiz-opt" type="button" data-value="a">7 десятков</button>
+      <button class="tc-quiz-opt" type="button" data-value="b">7 тысяч</button>
+      <button class="tc-quiz-opt" type="button" data-value="c">7 миллионов</button>
+    </div>
+    <p class="tc-quiz-note" hidden></p>
+  </section>
+  <div class="remember"><h3>Запомни!</h3><p>Класс = 3 разряда: единицы, десятки, сотни. Классы по порядку: единицы → тысячи → миллионы.</p></div>
+
+{% elif lesson.order == 2 %}
+  <section class="tc-card tc-card-rule">
+    <header class="tc-head"><span class="tc-tag">Правило</span><h2>Как сравнивать числа</h2></header>
+    <ol class="tc-list">
+      <li>Считаем цифры. Больше то число, в котором <b>больше цифр</b>.</li>
+      <li>Если цифр поровну — идём <b>слева направо</b> и ищем первую отличающуюся цифру.</li>
+      <li>Где эта цифра больше, то число и больше.</li>
+    </ol>
+    <p class="tc-formula">52 3<span class="tc-hl">8</span>1 &gt; 52 3<span class="tc-hl">1</span>8, потому что 8 &gt; 1</p>
+  </section>
+  <section class="tc-card">
+    <header class="tc-head"><span class="tc-tag is-try">Попробуй сам</span><h2>Сравни любые два числа</h2></header>
+    <div data-widget="compare" data-a="52381" data-b="52318"></div>
+  </section>
+  <section class="tc-card tc-quiz" data-answer="c" data-explain="В 100 000 шесть цифр, а в 99 999 — пять." data-hint="сначала посчитай, сколько цифр в каждом числе.">
+    <header class="tc-head"><span class="tc-tag is-check">Проверь себя</span><h2>Какой знак поставить: 99 999 … 100 000?</h2></header>
+    <div class="tc-quiz-opts">
+      <button class="tc-quiz-opt" type="button" data-value="a">&gt;</button>
+      <button class="tc-quiz-opt" type="button" data-value="b">=</button>
+      <button class="tc-quiz-opt" type="button" data-value="c">&lt;</button>
+    </div>
+    <p class="tc-quiz-note" hidden></p>
+  </section>
+  <div class="remember"><h3>Запомни!</h3><p>Клюв знака «&gt;» или «&lt;» всегда смотрит на меньшее число: 7 &gt; 3, 3 &lt; 7.</p></div>
+
+{% else %}
+  <section class="tc-card tc-card-rule">
+    <header class="tc-head"><span class="tc-tag">Правило</span><h2>Округление</h2></header>
+    <ol class="tc-list">
+      <li>Найди разряд, до которого округляешь.</li>
+      <li>Посмотри на <b>следующую цифру справа</b>.</li>
+      <li>0, 1, 2, 3, 4 — цифру разряда не меняем; 5, 6, 7, 8, 9 — увеличиваем на 1.</li>
+      <li>Все цифры правее заменяем нулями.</li>
+    </ol>
+  </section>
+  <section class="tc-card">
+    <header class="tc-head"><span class="tc-tag is-try">Попробуй сам</span><h2>К какому «круглому» числу ближе?</h2></header>
+    <div data-widget="round" data-value="4638" data-step="100"></div>
+  </section>
+  <section class="tc-card">
+    <header class="tc-head"><span class="tc-tag is-example">Пример</span><h2>Округлим 72 549 до тысяч</h2></header>
+    <ol class="tc-steps">
+      <li>Разряд тысяч: 7<span class="tc-hl">2</span> 549 — цифра <b>2</b>.</li>
+      <li>Следующая цифра справа — <b>5</b> (сотни).</li>
+      <li>5 ≥ 5, значит 2 увеличиваем на 1 → 3.</li>
+      <li>Правее ставим нули: <b>72 549 ≈ 73 000</b>.</li>
+    </ol>
+  </section>
+  <section class="tc-card tc-quiz" data-answer="a" data-explain="Цифра единиц 4 &lt; 5, поэтому десятки не меняются: 380." data-hint="посмотри на цифру единиц.">
+    <header class="tc-head"><span class="tc-tag is-check">Проверь себя</span><h2>Округли 384 до десятков</h2></header>
+    <div class="tc-quiz-opts">
+      <button class="tc-quiz-opt" type="button" data-value="a">380</button>
+      <button class="tc-quiz-opt" type="button" data-value="b">390</button>
+      <button class="tc-quiz-opt" type="button" data-value="c">400</button>
+    </div>
+    <p class="tc-quiz-note" hidden></p>
+  </section>
+  <div class="remember"><h3>Запомни!</h3><p>Знак «≈» читается «приблизительно равно». 0–4 — вниз, 5–9 — вверх.</p></div>
+{% endif %}
+</div>

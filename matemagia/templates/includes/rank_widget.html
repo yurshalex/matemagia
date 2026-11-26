@@ -1,6 +1,6 @@
 {# Ранг и опыт; rank_info — RewardService.get_rank_info #}
 <div class="rank-head">
-  <div class="rank-badge" aria-hidden="true"><div class="hex hex-gold hex-sm">★</div></div>
+  <div class="rank-badge" aria-hidden="true">{% include "includes/rank_crystal.html" %}</div>
   <div><p class="widget-label">Твой ранг</p><h2 class="rank-name">{{ rank_info.rank }}</h2></div>
 </div>
 <div class="progress-label"><span>Магический опыт</span><span>{{ rank_info.xp }}{% if rank_info.next_rank %} / {{ rank_info.xp|add:rank_info.xp_to_next }}{% endif %}</span></div>
