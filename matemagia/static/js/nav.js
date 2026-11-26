@@ -72,4 +72,64 @@
     clearTimeout(timer);
     timer = setTimeout(function () { toast.hidden = true; }, 2400);
   };
+
+  // ---------- Уведомления о достижениях ----------
+  // Справочник повторяет фикстуру game/fixtures/achievements.json: в ответе испытания
+  // сервер присылает только коды (new_achievements), без названий.
+  var ACH = {
+    first_task: { title: "Первое заклинание", description: "Реши первое задание", icon_code: "star", xp_reward: 10 },
+    ten_tasks: { title: "Десятка", description: "Реши 10 заданий", icon_code: "ten", xp_reward: 20 },
+    fifty_tasks: { title: "Полсотни", description: "Реши 50 заданий", icon_code: "fifty", xp_reward: 50 },
+    century: { title: "Сотня", description: "Реши 100 заданий", icon_code: "hundred", xp_reward: 100 },
+    no_errors: { title: "Без единой ошибки", description: "Пройди «Испытание» без ошибок", icon_code: "check", xp_reward: 40 },
+    three_challenges: { title: "Три испытания", description: "Пройди «Испытание» три раза", icon_code: "three", xp_reward: 50 },
+    week_streak: { title: "Неделя практики", description: "Занимайся семь дней подряд", icon_code: "seven", xp_reward: 40 },
+    fix_errors: { title: "Работа над ошибками", description: "Верно реши ранее ошибочное задание", icon_code: "plus", xp_reward: 20 }
+  };
+  var ICON = { star: "★", ten: "10", fifty: "50", hundred: "100", check: "✓", three: "3", seven: "7", plus: "+" };
+
+  // Приводит код или объект из ответа сервера к {code, title, description, icon}
+  window.mmAchievementInfo = function (a) {
+    var code = typeof a === "string" ? a : (a && a.code) || "";
+    var base = ACH[code] || {};
+    var src = typeof a === "object" && a ? a : {};
+    var icon = src.icon_code || base.icon_code;
+    return {
+      code: code,
+      title: src.title || base.title || "Новое достижение",
+      description: src.description || base.description || "",
+      icon: ICON[icon] || "✦",
+      xp_reward: src.xp_reward != null ? src.xp_reward : (base.xp_reward || 0)
+    };
+  };
+
+  // Всплывающая карточка «Новое достижение!»; несколько подряд показываются стопкой
+  var stack;
+  window.mmAchievement = function (a) {
+    var info = window.mmAchievementInfo(a);
+    if (!stack) {
+      stack = document.createElement("div");
+      stack.className = "ach-stack";
+      stack.setAttribute("role", "status");
+      stack.setAttribute("aria-live", "polite");
+      document.body.appendChild(stack);
+    }
+    var el = document.createElement("div");
+    el.className = "ach-toast";
+    el.innerHTML = '<span class="ach-toast-icon" aria-hidden="true"></span>' +
+      '<span class="ach-toast-body"><small>Новое достижение!</small><strong></strong><span></span></span>' +
+      '<button class="ach-toast-close" type="button" aria-label="Закрыть">×</button>';
+    el.querySelector(".ach-toast-icon").textContent = info.icon;
+    el.querySelector("strong").textContent = info.title;
+    el.querySelector(".ach-toast-body > span").textContent = info.description;
+    var close = function () {
+      if (el.classList.contains("is-leaving")) return;
+      el.classList.add("is-leaving");
+      setTimeout(function () { el.remove(); }, reduce ? 0 : 300);
+    };
+    el.querySelector("button").addEventListener("click", close);
+    stack.appendChild(el);
+    setTimeout(close, 5200);
+    return info;
+  };
 })();

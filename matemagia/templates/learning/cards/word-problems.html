@@ -1,0 +1,79 @@
+{# Карточки теории: «Текстовые задачи». Модели — static/js/theory_cards.js #}
+<div class="tc-deck">
+{% if lesson.order == 1 %}
+  <section class="tc-card tc-card-rule">
+    <header class="tc-head"><span class="tc-tag">Правило</span><h2>Условие и вопрос</h2></header>
+    <p>В каждой задаче есть <b class="tc-c-given">условие</b> — что известно, и <b class="tc-c-question">вопрос</b> — что нужно найти. Сначала выпиши их коротко.</p>
+  </section>
+  <section class="tc-card tc-problem">
+    <header class="tc-head"><span class="tc-tag is-try">Попробуй сам</span><h2>Разбери задачу на части</h2></header>
+    <p class="tc-problem-text">В библиотеке было <mark data-kind="given">240 книг</mark>. Привезли ещё <mark data-kind="given">75 книг</mark>, а <mark data-kind="given">58 книг</mark> выдали читателям. <mark data-kind="question">Сколько книг осталось в библиотеке?</mark></p>
+    <div class="tc-actions">
+      <button class="tc-btn" type="button" data-highlight="given" aria-pressed="false">Что известно?</button>
+      <button class="tc-btn" type="button" data-highlight="question" aria-pressed="false">Что найти?</button>
+    </div>
+    <div class="tc-short">
+      <p><b>Было</b> — 240 кн.</p><p><b>Привезли</b> — 75 кн.</p><p><b>Выдали</b> — 58 кн.</p><p><b>Осталось</b> — <span class="tc-c-question">?</span></p>
+    </div>
+  </section>
+  <section class="tc-card tc-quiz" data-answer="b" data-explain="240 + 75 − 58 = 257 книг." data-hint="сначала прибавь привезённые книги, потом вычти выданные.">
+    <header class="tc-head"><span class="tc-tag is-check">Проверь себя</span><h2>Сколько книг осталось?</h2></header>
+    <div class="tc-quiz-opts">
+      <button class="tc-quiz-opt" type="button" data-value="a">223</button>
+      <button class="tc-quiz-opt" type="button" data-value="b">257</button>
+      <button class="tc-quiz-opt" type="button" data-value="c">373</button>
+    </div>
+    <p class="tc-quiz-note" hidden></p>
+  </section>
+  <div class="remember"><h3>Запомни!</h3><p>Перед решением подчеркни числа и вопрос — половина работы сделана.</p></div>
+
+{% elif lesson.order == 2 %}
+  <section class="tc-card tc-card-rule">
+    <header class="tc-head"><span class="tc-tag">Правило</span><h2>План решения</h2></header>
+    <div class="tc-order">
+      <span><b>1</b>Прочитай и выпиши кратко</span><span><b>2</b>Что можно узнать сразу?</span><span><b>3</b>Реши по действиям</span><span><b>4</b>Проверь и запиши ответ</span>
+    </div>
+  </section>
+  <section class="tc-card">
+    <header class="tc-head"><span class="tc-tag is-example">Пример</span><h2>В 3 коробках по 12 карандашей. Раздали 20. Сколько осталось?</h2></header>
+    <ol class="tc-steps">
+      <li><b>Кратко:</b> 3 кор. по 12 к. · раздали 20 к. · осталось — ?</li>
+      <li><b>Что узнаем сначала?</b> Сколько всего карандашей: 3 × 12 = 36 (к.)</li>
+      <li><b>Потом:</b> сколько осталось: 36 − 20 = 16 (к.)</li>
+      <li><b>Проверка:</b> 16 + 20 = 36 = 3 × 12 ✓ <br><b>Ответ:</b> 16 карандашей.</li>
+    </ol>
+  </section>
+  <section class="tc-card">
+    <header class="tc-head"><span class="tc-tag is-cards">Карточки</span><h2>Слова-подсказки — переверни</h2></header>
+    <div class="tc-flips">
+      <button class="tc-flip" type="button" aria-pressed="false"><span class="tc-flip-front">«на … больше»</span><span class="tc-flip-back">Сложение: 5 на 3 больше — 5 + 3</span></button>
+      <button class="tc-flip" type="button" aria-pressed="false"><span class="tc-flip-front">«в … раз больше»</span><span class="tc-flip-back">Умножение: 5 в 3 раза больше — 5 × 3</span></button>
+      <button class="tc-flip" type="button" aria-pressed="false"><span class="tc-flip-front">«поровну», «каждому»</span><span class="tc-flip-back">Деление на равные части</span></button>
+    </div>
+  </section>
+  <div class="remember"><h3>Запомни!</h3><p>«На» — сложение или вычитание, «в … раз» — умножение или деление.</p></div>
+
+{% else %}
+  <section class="tc-card tc-card-rule">
+    <header class="tc-head"><span class="tc-tag">Правило</span><h2>Задачи на движение</h2></header>
+    <div class="tc-triad">
+      <span class="tc-formula">S = v × t</span><span class="tc-formula">v = S : t</span><span class="tc-formula">t = S : v</span>
+    </div>
+    <p class="tc-small">S — путь (расстояние), v — скорость, t — время. Навстречу друг другу скорости складываются.</p>
+  </section>
+  <section class="tc-card">
+    <header class="tc-head"><span class="tc-tag is-try">Попробуй сам</span><h2>Машина и автобус едут навстречу</h2></header>
+    <div data-widget="motion" data-v1="60" data-v2="40" data-t="3"></div>
+  </section>
+  <section class="tc-card tc-quiz" data-answer="c" data-explain="t = S : v = 240 : 80 = 3 ч." data-hint="чтобы найти время, путь делят на скорость.">
+    <header class="tc-head"><span class="tc-tag is-check">Проверь себя</span><h2>Поезд прошёл 240 км со скоростью 80 км/ч. Сколько часов он ехал?</h2></header>
+    <div class="tc-quiz-opts">
+      <button class="tc-quiz-opt" type="button" data-value="a">160</button>
+      <button class="tc-quiz-opt" type="button" data-value="b">4</button>
+      <button class="tc-quiz-opt" type="button" data-value="c">3</button>
+    </div>
+    <p class="tc-quiz-note" hidden></p>
+  </section>
+  <div class="remember"><h3>Запомни!</h3><p>Следи за единицами: км/ч × ч = км, м/мин × мин = м.</p></div>
+{% endif %}
+</div>

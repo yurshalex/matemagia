@@ -1,0 +1,83 @@
+{# Карточки теории: «Десятичные дроби». Модели — static/js/theory_cards.js #}
+<div class="tc-deck">
+{% if lesson.order == 1 %}
+  <section class="tc-card tc-card-rule">
+    <header class="tc-head"><span class="tc-tag">Правило</span><h2>Запись с запятой</h2></header>
+    <div class="tc-dec-places">
+      <span><b>3</b><small>целые</small></span><span class="is-comma">,</span><span><b>4</b><small>десятые</small></span><span><b>7</b><small>сотые</small></span><span><b>5</b><small>тысячные</small></span>
+    </div>
+    <p class="tc-formula">3,475 = 3 + <span class="frac"><span>4</span><span>10</span></span> + <span class="frac"><span>7</span><span>100</span></span> + <span class="frac"><span>5</span><span>1000</span></span></p>
+  </section>
+  <section class="tc-card">
+    <header class="tc-head"><span class="tc-tag is-try">Попробуй сам</span><h2>Сотня клеток = одно целое</h2></header>
+    <div data-widget="decimal-grid" data-value="37"></div>
+  </section>
+  <section class="tc-card">
+    <header class="tc-head"><span class="tc-tag is-cards">Карточки</span><h2>Переведи в десятичную — переверни</h2></header>
+    <div class="tc-flips">
+      <button class="tc-flip" type="button" aria-pressed="false"><span class="tc-flip-front"><span class="frac"><span>7</span><span>10</span></span></span><span class="tc-flip-back">0,7</span></button>
+      <button class="tc-flip" type="button" aria-pressed="false"><span class="tc-flip-front"><span class="frac"><span>7</span><span>100</span></span></span><span class="tc-flip-back">0,07 — сотые на втором месте после запятой</span></button>
+      <button class="tc-flip" type="button" aria-pressed="false"><span class="tc-flip-front">2 <span class="frac"><span>35</span><span>100</span></span></span><span class="tc-flip-back">2,35</span></button>
+    </div>
+  </section>
+  <section class="tc-card tc-quiz" data-answer="c" data-explain="Три нуля в знаменателе — три цифры после запятой: 0,045." data-hint="сколько нулей в знаменателе, столько цифр после запятой.">
+    <header class="tc-head"><span class="tc-tag is-check">Проверь себя</span><h2>Как записать <span class="frac"><span>45</span><span>1000</span></span>?</h2></header>
+    <div class="tc-quiz-opts">
+      <button class="tc-quiz-opt" type="button" data-value="a">0,45</button>
+      <button class="tc-quiz-opt" type="button" data-value="b">4,5</button>
+      <button class="tc-quiz-opt" type="button" data-value="c">0,045</button>
+    </div>
+    <p class="tc-quiz-note" hidden></p>
+  </section>
+  <div class="remember"><h3>Запомни!</h3><p>Сколько нулей в знаменателе (10, 100, 1000), столько цифр после запятой.</p></div>
+
+{% elif lesson.order == 2 %}
+  <section class="tc-card tc-card-rule">
+    <header class="tc-head"><span class="tc-tag">Правило</span><h2>Сравнение десятичных дробей</h2></header>
+    <ol class="tc-list">
+      <li>Сравниваем <b>целые части</b>.</li>
+      <li>Если они равны — уравниваем число знаков после запятой, дописав нули: 3,5 = 3,50.</li>
+      <li>Сравниваем по разрядам: десятые, затем сотые и так далее.</li>
+    </ol>
+  </section>
+  <section class="tc-card">
+    <header class="tc-head"><span class="tc-tag is-try">Попробуй сам</span><h2>Длиннее — не значит больше</h2></header>
+    <div data-widget="compare" data-decimal data-a="3,47" data-b="3,5"></div>
+  </section>
+  <section class="tc-card tc-quiz" data-answer="b" data-explain="0,8 = 0,80, а 0,80 > 0,75." data-hint="допиши ноль: 0,8 = 0,80.">
+    <header class="tc-head"><span class="tc-tag is-check">Проверь себя</span><h2>Какая дробь больше?</h2></header>
+    <div class="tc-quiz-opts">
+      <button class="tc-quiz-opt" type="button" data-value="a">0,75</button>
+      <button class="tc-quiz-opt" type="button" data-value="b">0,8</button>
+      <button class="tc-quiz-opt" type="button" data-value="c">Они равны</button>
+    </div>
+    <p class="tc-quiz-note" hidden></p>
+  </section>
+  <div class="remember"><h3>Запомни!</h3><p>Нули в конце дробной части значение не меняют: 2,7 = 2,70 = 2,700.</p></div>
+
+{% else %}
+  <section class="tc-card tc-card-rule">
+    <header class="tc-head"><span class="tc-tag">Правило</span><h2>Запятая под запятой</h2></header>
+    <ol class="tc-list">
+      <li>Записываем числа так, чтобы <b>запятая стояла под запятой</b>.</li>
+      <li>Уравниваем количество знаков после запятой нулями.</li>
+      <li>Складываем или вычитаем как натуральные числа.</li>
+      <li>В ответе ставим запятую под запятыми.</li>
+    </ol>
+  </section>
+  <section class="tc-card">
+    <header class="tc-head"><span class="tc-tag is-try">Попробуй сам</span><h2>Столбиком с запятой</h2></header>
+    <div data-widget="column" data-decimal data-a="12,75" data-b="3,6" data-op="+"></div>
+  </section>
+  <section class="tc-card tc-quiz" data-answer="a" data-explain="5,00 − 1,25 = 3,75." data-hint="запиши 5 как 5,00.">
+    <header class="tc-head"><span class="tc-tag is-check">Проверь себя</span><h2>Сколько будет 5 − 1,25?</h2></header>
+    <div class="tc-quiz-opts">
+      <button class="tc-quiz-opt" type="button" data-value="a">3,75</button>
+      <button class="tc-quiz-opt" type="button" data-value="b">4,25</button>
+      <button class="tc-quiz-opt" type="button" data-value="c">3,85</button>
+    </div>
+    <p class="tc-quiz-note" hidden></p>
+  </section>
+  <div class="remember"><h3>Запомни!</h3><p>У натурального числа запятая «прячется» в конце: 5 = 5,0 = 5,00.</p></div>
+{% endif %}
+</div>

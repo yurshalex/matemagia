@@ -1,0 +1,84 @@
+{# Карточки теории: «Площади и объёмы». Модели — static/js/theory_cards.js #}
+<div class="tc-deck">
+{% if lesson.order == 1 %}
+  <section class="tc-card tc-card-rule">
+    <header class="tc-head"><span class="tc-tag">Правило</span><h2>Площадь</h2></header>
+    <p>Площадь показывает, сколько единичных квадратов помещается внутри фигуры.</p>
+    <div class="tc-props">
+      <div><small>Прямоугольник</small><p class="tc-formula">S = a × b</p></div>
+      <div><small>Квадрат</small><p class="tc-formula">S = a × a</p></div>
+    </div>
+  </section>
+  <section class="tc-card">
+    <header class="tc-head"><span class="tc-tag is-try">Попробуй сам</span><h2>Заполни прямоугольник квадратиками</h2></header>
+    <div data-widget="area" data-a="5" data-b="3"></div>
+  </section>
+  <section class="tc-card">
+    <header class="tc-head"><span class="tc-tag is-cards">Карточки</span><h2>Площадь или периметр? — переверни</h2></header>
+    <div class="tc-flips">
+      <button class="tc-flip" type="button" aria-pressed="false"><span class="tc-flip-front">Сколько плитки нужно на пол?</span><span class="tc-flip-back">Площадь — считаем квадратики внутри</span></button>
+      <button class="tc-flip" type="button" aria-pressed="false"><span class="tc-flip-front">Сколько нужно бордюра вокруг клумбы?</span><span class="tc-flip-back">Периметр — длина границы</span></button>
+      <button class="tc-flip" type="button" aria-pressed="false"><span class="tc-flip-front">Сколько обоев на стену?</span><span class="tc-flip-back">Площадь стены</span></button>
+    </div>
+  </section>
+  <section class="tc-card tc-quiz" data-answer="b" data-explain="S = 8 × 5 = 40 м²." data-hint="перемножь длину и ширину.">
+    <header class="tc-head"><span class="tc-tag is-check">Проверь себя</span><h2>Комната 8 м на 5 м. Какова её площадь?</h2></header>
+    <div class="tc-quiz-opts">
+      <button class="tc-quiz-opt" type="button" data-value="a">26 м²</button>
+      <button class="tc-quiz-opt" type="button" data-value="b">40 м²</button>
+      <button class="tc-quiz-opt" type="button" data-value="c">13 м²</button>
+    </div>
+    <p class="tc-quiz-note" hidden></p>
+  </section>
+  <div class="remember"><h3>Запомни!</h3><p>Площадь — в квадратных единицах: см², м², км².</p></div>
+
+{% elif lesson.order == 2 %}
+  <section class="tc-card tc-card-rule">
+    <header class="tc-head"><span class="tc-tag">Правило</span><h2>Объём</h2></header>
+    <p>Объём показывает, сколько единичных кубиков помещается внутри тела.</p>
+    <div class="tc-props">
+      <div><small>Прямоугольный параллелепипед</small><p class="tc-formula">V = a × b × c</p></div>
+      <div><small>Куб</small><p class="tc-formula">V = a × a × a</p></div>
+    </div>
+  </section>
+  <section class="tc-card">
+    <header class="tc-head"><span class="tc-tag is-try">Попробуй сам</span><h2>Собери коробку из кубиков</h2></header>
+    <div data-widget="volume" data-a="4" data-b="3" data-c="2"></div>
+  </section>
+  <section class="tc-card tc-quiz" data-answer="a" data-explain="V = 3 × 3 × 3 = 27 см³." data-hint="у куба все рёбра равны: перемножь три одинаковых числа.">
+    <header class="tc-head"><span class="tc-tag is-check">Проверь себя</span><h2>Ребро куба 3 см. Чему равен объём?</h2></header>
+    <div class="tc-quiz-opts">
+      <button class="tc-quiz-opt" type="button" data-value="a">27 см³</button>
+      <button class="tc-quiz-opt" type="button" data-value="b">9 см³</button>
+      <button class="tc-quiz-opt" type="button" data-value="c">12 см³</button>
+    </div>
+    <p class="tc-quiz-note" hidden></p>
+  </section>
+  <div class="remember"><h3>Запомни!</h3><p>Объём — в кубических единицах: см³, дм³ (литр), м³.</p></div>
+
+{% else %}
+  <section class="tc-card tc-card-rule">
+    <header class="tc-head"><span class="tc-tag">Правило</span><h2>Единицы измерения</h2></header>
+    <div class="tc-props">
+      <div><small>Длина</small><p class="tc-formula">1 м = 10 дм = 100 см</p></div>
+      <div><small>Площадь</small><p class="tc-formula">1 м² = 10 000 см²</p></div>
+      <div><small>Объём</small><p class="tc-formula">1 м³ = 1 000 дм³</p></div>
+    </div>
+    <p class="tc-small">Почему 10 000? Квадрат 1 м × 1 м — это 100 см × 100 см. Для объёма — 10 дм × 10 дм × 10 дм.</p>
+  </section>
+  <section class="tc-card">
+    <header class="tc-head"><span class="tc-tag is-try">Попробуй сам</span><h2>Переводчик единиц</h2></header>
+    <div data-widget="units" data-kind="length" data-value="3"></div>
+  </section>
+  <section class="tc-card tc-quiz" data-answer="c" data-explain="1 дм³ = 1 литр, значит 5 дм³ = 5 л." data-hint="вспомни, какой объём у литровой банки.">
+    <header class="tc-head"><span class="tc-tag is-check">Проверь себя</span><h2>Сколько литров в 5 дм³?</h2></header>
+    <div class="tc-quiz-opts">
+      <button class="tc-quiz-opt" type="button" data-value="a">500 л</button>
+      <button class="tc-quiz-opt" type="button" data-value="b">50 л</button>
+      <button class="tc-quiz-opt" type="button" data-value="c">5 л</button>
+    </div>
+    <p class="tc-quiz-note" hidden></p>
+  </section>
+  <div class="remember"><h3>Запомни!</h3><p>К мелким единицам — умножаем, к крупным — делим.</p></div>
+{% endif %}
+</div>

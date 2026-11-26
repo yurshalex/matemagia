@@ -1,0 +1,77 @@
+{# Карточки теории: «Геометрия». Модели — static/js/theory_cards.js #}
+<div class="tc-deck">
+{% if lesson.order == 1 %}
+  <section class="tc-card tc-card-rule">
+    <header class="tc-head"><span class="tc-tag">Правило</span><h2>Виды углов</h2></header>
+    <div class="tc-props tc-props-4">
+      <div><small>Острый</small><p class="tc-formula">&lt; 90°</p></div>
+      <div><small>Прямой</small><p class="tc-formula">= 90°</p></div>
+      <div><small>Тупой</small><p class="tc-formula">90°…180°</p></div>
+      <div><small>Развёрнутый</small><p class="tc-formula">= 180°</p></div>
+    </div>
+    <p class="tc-small">Углы измеряют транспортиром в градусах (°).</p>
+  </section>
+  <section class="tc-card">
+    <header class="tc-head"><span class="tc-tag is-try">Попробуй сам</span><h2>Раскрой угол</h2></header>
+    <div data-widget="angle" data-value="60"></div>
+  </section>
+  <section class="tc-card tc-quiz" data-answer="b" data-explain="120° больше 90°, но меньше 180° — тупой угол." data-hint="сравни 120° с 90° и 180°.">
+    <header class="tc-head"><span class="tc-tag is-check">Проверь себя</span><h2>Угол 120° — это…</h2></header>
+    <div class="tc-quiz-opts">
+      <button class="tc-quiz-opt" type="button" data-value="a">острый</button>
+      <button class="tc-quiz-opt" type="button" data-value="b">тупой</button>
+      <button class="tc-quiz-opt" type="button" data-value="c">развёрнутый</button>
+    </div>
+    <p class="tc-quiz-note" hidden></p>
+  </section>
+  <div class="remember"><h3>Запомни!</h3><p>Угол тетрадной клетки — прямой (90°). Сравнивай с ним любой угол.</p></div>
+
+{% elif lesson.order == 2 %}
+  <section class="tc-card tc-card-rule">
+    <header class="tc-head"><span class="tc-tag">Правило</span><h2>Треугольники</h2></header>
+    <p class="tc-formula">∠A + ∠B + ∠C = 180°</p>
+    <div class="tc-props">
+      <div><small>По углам</small><p class="tc-small">остроугольный, прямоугольный, тупоугольный</p></div>
+      <div><small>По сторонам</small><p class="tc-small">разносторонний, равнобедренный (2 равные стороны), равносторонний (все равны)</p></div>
+    </div>
+  </section>
+  <section class="tc-card">
+    <header class="tc-head"><span class="tc-tag is-try">Попробуй сам</span><h2>Меняй углы — сумма не меняется</h2></header>
+    <div data-widget="triangle" data-a="60" data-b="70"></div>
+  </section>
+  <section class="tc-card tc-quiz" data-answer="a" data-explain="180° − 90° − 35° = 55°." data-hint="вычти два известных угла из 180°.">
+    <header class="tc-head"><span class="tc-tag is-check">Проверь себя</span><h2>В треугольнике углы 90° и 35°. Чему равен третий?</h2></header>
+    <div class="tc-quiz-opts">
+      <button class="tc-quiz-opt" type="button" data-value="a">55°</button>
+      <button class="tc-quiz-opt" type="button" data-value="b">65°</button>
+      <button class="tc-quiz-opt" type="button" data-value="c">125°</button>
+    </div>
+    <p class="tc-quiz-note" hidden></p>
+  </section>
+  <div class="remember"><h3>Запомни!</h3><p>В треугольнике может быть только один прямой или один тупой угол.</p></div>
+
+{% else %}
+  <section class="tc-card tc-card-rule">
+    <header class="tc-head"><span class="tc-tag">Правило</span><h2>Периметр</h2></header>
+    <p>Периметр — сумма длин всех сторон фигуры, «длина забора вокруг».</p>
+    <div class="tc-props">
+      <div><small>Прямоугольник</small><p class="tc-formula">P = 2 × (a + b)</p></div>
+      <div><small>Квадрат</small><p class="tc-formula">P = 4 × a</p></div>
+    </div>
+  </section>
+  <section class="tc-card">
+    <header class="tc-head"><span class="tc-tag is-try">Попробуй сам</span><h2>Жук обходит прямоугольник</h2></header>
+    <div data-widget="perimeter" data-a="6" data-b="4"></div>
+  </section>
+  <section class="tc-card tc-quiz" data-answer="c" data-explain="P = 4 × 7 = 28 см." data-hint="у квадрата четыре одинаковые стороны.">
+    <header class="tc-head"><span class="tc-tag is-check">Проверь себя</span><h2>Сторона квадрата 7 см. Какой у него периметр?</h2></header>
+    <div class="tc-quiz-opts">
+      <button class="tc-quiz-opt" type="button" data-value="a">14 см</button>
+      <button class="tc-quiz-opt" type="button" data-value="b">49 см</button>
+      <button class="tc-quiz-opt" type="button" data-value="c">28 см</button>
+    </div>
+    <p class="tc-quiz-note" hidden></p>
+  </section>
+  <div class="remember"><h3>Запомни!</h3><p>Периметр измеряется в единицах длины: мм, см, м — без «квадратов».</p></div>
+{% endif %}
+</div>

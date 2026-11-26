@@ -9,7 +9,7 @@
          data-mode="{{ mode }}" data-total="{{ total|default:10 }}" data-position="{{ position|default:1 }}"
          data-next-url="{% url 'task_next' %}" data-check-url="{% url 'check_answer' 0 %}"
          data-answer-url="{% url 'game' %}" data-challenge-url="{% url 'game' %}" data-result-url="{% url 'game_result' %}"
-         data-done-url="{{ done_url|default:'/progress/errors/' }}">
+         data-done-url="{{ done_url|default:'/progress/errors/' }}" data-start-xp="{{ user.current_xp|default:0 }}">
   <form class="task-area" id="task-form" novalidate>
     {% csrf_token %}
     <span class="task-chip" id="task-chip">Заклинание</span>
@@ -37,7 +37,12 @@
   <div class="result-stars" id="result-stars"></div>
   <p id="result-text"></p>
   <p class="result-xp" id="result-xp"></p>
+  <div class="result-achievements" id="result-achievements" hidden>
+    <h3>Новые достижения</h3>
+    <ul class="new-achievements" id="result-achievements-list"></ul>
+  </div>
   <div class="hero-actions">
+    {% if mode == "single" %}<a class="btn btn-primary" href="{{ done_url|default:'/progress/errors/' }}">К работе над ошибками</a>{% endif %}
     <a class="btn btn-violet" id="btn-again" href="{% if again_topic %}{% url 'task_list' %}?topic={{ again_topic }}{% else %}{{ again_url }}{% endif %}">Ещё серия</a>
     <a class="btn btn-light" href="{% url 'topic_list' %}">К темам</a>
   </div>

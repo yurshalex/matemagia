@@ -1,0 +1,84 @@
+{# Карточки теории: «Сложение и вычитание». Модели — static/js/theory_cards.js #}
+<div class="tc-deck">
+{% if lesson.order == 1 %}
+  <section class="tc-card tc-card-rule">
+    <header class="tc-head"><span class="tc-tag">Правило</span><h2>Столбиком — разряд под разрядом</h2></header>
+    <ol class="tc-list">
+      <li>Пишем единицы под единицами, десятки под десятками и так далее.</li>
+      <li>Считаем <b>справа налево</b>, начиная с единиц.</li>
+      <li>При сложении: если получилось 10 или больше — пишем единицы, а <b>1 переносим</b> в следующий разряд.</li>
+      <li>При вычитании: если сверху цифра меньше — <b>занимаем 1</b> у соседнего разряда (это 10 единиц текущего).</li>
+    </ol>
+  </section>
+  <section class="tc-card">
+    <header class="tc-head"><span class="tc-tag is-try">Попробуй сам</span><h2>Считаем столбиком по шагам</h2></header>
+    <div data-widget="column" data-a="4587" data-b="2765" data-op="+"></div>
+  </section>
+  <section class="tc-card tc-quiz" data-answer="b" data-explain="602 − 275: занимаем дважды и получаем 327." data-hint="проверь сложением: ответ + 275 должен дать 602.">
+    <header class="tc-head"><span class="tc-tag is-check">Проверь себя</span><h2>Сколько будет 602 − 275?</h2></header>
+    <div class="tc-quiz-opts">
+      <button class="tc-quiz-opt" type="button" data-value="a">437</button>
+      <button class="tc-quiz-opt" type="button" data-value="b">327</button>
+      <button class="tc-quiz-opt" type="button" data-value="c">333</button>
+    </div>
+    <p class="tc-quiz-note" hidden></p>
+  </section>
+  <div class="remember"><h3>Запомни!</h3><p>Вычитание проверяют сложением: разность + вычитаемое = уменьшаемое.</p></div>
+
+{% elif lesson.order == 2 %}
+  <section class="tc-card tc-card-rule">
+    <header class="tc-head"><span class="tc-tag">Правило</span><h2>Свойства сложения</h2></header>
+    <div class="tc-props">
+      <div><small>Переместительное</small><p class="tc-formula">a + b = b + a</p></div>
+      <div><small>Сочетательное</small><p class="tc-formula">(a + b) + c = a + (b + c)</p></div>
+      <div><small>Сложение с нулём</small><p class="tc-formula">a + 0 = a</p></div>
+    </div>
+  </section>
+  <section class="tc-card">
+    <header class="tc-head"><span class="tc-tag is-try">Попробуй сам</span><h2>Поменяй слагаемые местами</h2></header>
+    <div data-widget="swap" data-a="3" data-b="5"></div>
+  </section>
+  <section class="tc-card">
+    <header class="tc-head"><span class="tc-tag is-example">Пример</span><h2>Считаем удобно: 37 + 48 + 63</h2></header>
+    <ol class="tc-steps">
+      <li>Ищем слагаемые, которые дают «круглое» число: 37 + 63 = 100.</li>
+      <li>Переставляем: 37 + 48 + 63 = (37 + 63) + 48.</li>
+      <li>Считаем: 100 + 48 = <b>148</b>.</li>
+    </ol>
+  </section>
+  <section class="tc-card tc-quiz" data-answer="a" data-explain="(26 + 74) + 15 = 100 + 15 = 115." data-hint="сложи сначала 26 и 74.">
+    <header class="tc-head"><span class="tc-tag is-check">Проверь себя</span><h2>Найди удобно: 26 + 15 + 74</h2></header>
+    <div class="tc-quiz-opts">
+      <button class="tc-quiz-opt" type="button" data-value="a">115</button>
+      <button class="tc-quiz-opt" type="button" data-value="b">105</button>
+      <button class="tc-quiz-opt" type="button" data-value="c">125</button>
+    </div>
+    <p class="tc-quiz-note" hidden></p>
+  </section>
+  <div class="remember"><h3>Запомни!</h3><p>Слагаемые можно переставлять и группировать как угодно — сумма не изменится.</p></div>
+
+{% else %}
+  <section class="tc-card tc-card-rule">
+    <header class="tc-head"><span class="tc-tag">Правило</span><h2>Как найти неизвестное</h2></header>
+    <div class="tc-props">
+      <div><small>Слагаемое</small><p class="tc-formula">x + 15 = 42 → x = 42 − 15</p><p class="tc-small">сумма − известное слагаемое</p></div>
+      <div><small>Уменьшаемое</small><p class="tc-formula">x − 8 = 20 → x = 20 + 8</p><p class="tc-small">разность + вычитаемое</p></div>
+      <div><small>Вычитаемое</small><p class="tc-formula">50 − x = 30 → x = 50 − 30</p><p class="tc-small">уменьшаемое − разность</p></div>
+    </div>
+  </section>
+  <section class="tc-card">
+    <header class="tc-head"><span class="tc-tag is-try">Попробуй сам</span><h2>Уравнение — это весы</h2></header>
+    <div data-widget="balance" data-a="15" data-c="42"></div>
+  </section>
+  <section class="tc-card tc-quiz" data-answer="c" data-explain="x — уменьшаемое: x = 34 + 16 = 50." data-hint="x стоит на месте уменьшаемого. Как его найти?">
+    <header class="tc-head"><span class="tc-tag is-check">Проверь себя</span><h2>Реши: x − 16 = 34</h2></header>
+    <div class="tc-quiz-opts">
+      <button class="tc-quiz-opt" type="button" data-value="a">18</button>
+      <button class="tc-quiz-opt" type="button" data-value="b">40</button>
+      <button class="tc-quiz-opt" type="button" data-value="c">50</button>
+    </div>
+    <p class="tc-quiz-note" hidden></p>
+  </section>
+  <div class="remember"><h3>Запомни!</h3><p>После решения подставь ответ в уравнение — так ты сам проверишь, верно ли.</p></div>
+{% endif %}
+</div>

@@ -26,7 +26,10 @@
   };
 
   var task = null, total = +(card.dataset.total || 10), number = 0, tried = false, lastResponse = null;
-  var results = [], xpTotal = 0, busy = false;
+  var results = [], busy = false;
+  // Опыт показывается только в конце: считаем его как разницу total_xp из последнего ответа сервера
+  // и опыта на момент открытия страницы (включает награды за достижения).
+  var startXp = +(card.dataset.startXp || 0), lastTotalXp = null, earned = [];
 
   // ---------- Сервер ----------
   function csrf() {
@@ -310,24 +313,41 @@
     btn.next.textContent = mode === "single" ? "Готово" : number >= total ? "Завершить" : "Дальше →";
   }
 
-  function floatXP(amount) {
-    var r = btn.check.getBoundingClientRect();
-    var el = document.createElement("div");
-    el.className = "xp-float";
-    el.textContent = "+" + amount + " опыта";
-    el.style.left = (r.left + r.width / 2) + "px";
-    el.style.top = (r.top - 10) + "px";
-    document.body.appendChild(el);
-    setTimeout(function () { el.remove(); }, 1400);
-  }
+  // ---------- Испытание: данные для страницы итогов (sessionStorage) ----------
+  var RUN_KEY = "mm-challenge-run";
+  function loadRun() { try { return JSON.parse(sessionStorage.getItem(RUN_KEY)) || null; } catch (e) { return null; } }
+  function saveRun(run) { try { sessionStorage.setItem(RUN_KEY, JSON.stringify(run)); } catch (e) { /* приватный режим */ } }
 
+  // Новый ранг — короткое сообщение, достижения — всплывающие карточки (без опыта: он в итогах)
   function celebrate(data) {
     if (data.rank_changed) window.mmToast("Новый ранг: " + data.rank + "!");
-    var list = data.new_achievements_info || [];
+    var list = (data.new_achievements_info && data.new_achievements_info.length) ? data.new_achievements_info : (data.new_achievements || []);
     list.forEach(function (a, i) {
-      setTimeout(function () { window.mmToast("Получено достижение «" + a.title + "»" + (a.xp_reward ? " · +" + a.xp_reward + " опыта" : "")); }, (data.rank_changed ? 2600 : 0) + i * 2600);
+      var info = window.mmAchievementInfo(a);
+      if (earned.some(function (e) { return e.code === info.code; })) return;
+      earned.push(info);
+      setTimeout(function () { window.mmAchievement(info); }, i * 450);
     });
+    if (mode === "challenge") {
+      var run = loadRun() || { startXp: startXp, achievements: [] };
+      list.forEach(function (a) {
+        var info = window.mmAchievementInfo(a);
+        if (!run.achievements.some(function (e) { return e.code === info.code; })) run.achievements.push(info);
+      });
+      saveRun(run);
+    }
   }
+
+  function showEarned() {
+    var box = $("result-achievements"), list = $("result-achievements-list");
+    if (!box) return;
+    box.hidden = !earned.length;
+    list.innerHTML = earned.map(function (a) {
+      return '<li><span class="hex hex-gold hex-sm" aria-hidden="true">' + esc(a.icon) + "</span><span><b>" + esc(a.title) + "</b>" +
+        (a.description ? "<small>" + esc(a.description) + "</small>" : "") + "</span></li>";
+    }).join("");
+  }
+  function gainedXp() { return lastTotalXp === null ? 0 : Math.max(lastTotalXp - startXp, 0); }
 
   // ---------- Проверка ----------
   form.addEventListener("submit", function (e) {
@@ -364,11 +384,11 @@
     var ok = !!d.is_correct;
     mark(ok, d.correct_answer, false);
     lock(true);
-    if (d.xp_earned) { xpTotal += d.xp_earned; floatXP(d.xp_earned); }
+    if (typeof d.total_xp === "number") lastTotalXp = d.total_xp;
     celebrate(d);
     if (ok) {
       setResult(tried ? "wrong" : "correct");
-      say("correct", "Заклинание сработало!", d.xp_earned ? " +" + d.xp_earned + " опыта." : tried ? " Опыт начисляется за верный ответ с первой попытки." : "");
+      say("correct", "Заклинание сработало!", d.explanation ? " " + fmt(d.explanation) : "");
       setButtons("done");
     } else {
       tried = true;
@@ -412,7 +432,7 @@
   btn.skip.addEventListener("click", function () { setResult("skip"); loadNext(); });
   btn.next.addEventListener("click", function () {
     if (!results[number - 1]) setResult(tried ? "wrong" : "skip");
-    if (mode === "single") { location.href = card.dataset.doneUrl; return; }
+    if (mode === "single") { finish(); return; }
     if (mode === "challenge") {
       if (card.dataset.finished) { location.href = card.dataset.resultUrl; return; }
       if (nextTask) { render(nextTask, number + 1); return; }
@@ -457,12 +477,21 @@
     var percent = Math.round(correct / n * 100);
     card.hidden = true;
     $("result-card").hidden = false;
+    var xp = gainedXp();
+    $("result-xp").textContent = xp ? "+" + xp + " опыта" : "Опыт не начислен";
+    $("result-xp").classList.toggle("is-zero", !xp);
+    showEarned();
+    if (mode === "single") {
+      $("result-stars").innerHTML = "";
+      $("result-title").textContent = results[0] === "correct" ? "Ошибка исправлена!" : "Задание закрыто";
+      $("result-text").textContent = results[0] === "correct" ? "Верно с первой попытки." : "Опыт начисляется за верный ответ с первой попытки.";
+      return;
+    }
     $("result-stars").innerHTML = done.map(function (r, i) {
       return '<span class="star is-' + (r || "skip") + '" style="--n:' + i + '"></span>';
     }).join("");
     $("result-title").textContent = percent >= 70 ? "Отличная серия!" : "Серия пройдена!";
     $("result-text").textContent = "С первой попытки верно " + correct + " из " + number + " (" + percent + "%)";
-    $("result-xp").textContent = "+" + xpTotal + " опыта";
     starsBar.querySelectorAll(".star").forEach(function (s) { s.classList.remove("is-current"); });
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -470,6 +499,8 @@
   // ---------- Старт ----------
   var initial = $("task-data") ? JSON.parse($("task-data").textContent) : null;
   if (mode === "single") total = 1;
+  // Испытание началось заново (задание 1): запоминаем опыт до старта, достижения копим до итогов
+  if (mode === "challenge" && +(card.dataset.position || 1) === 1) saveRun({ startXp: startXp, achievements: [] });
   buildStars(total);
   if (mode === "series") loadNext();
   else if (initial) render(initial, +(card.dataset.position || 1));

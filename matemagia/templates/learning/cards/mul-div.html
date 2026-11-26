@@ -1,0 +1,80 @@
+{# Карточки теории: «Умножение и деление». Модели — static/js/theory_cards.js #}
+<div class="tc-deck">
+{% if lesson.order == 1 %}
+  <section class="tc-card tc-card-rule">
+    <header class="tc-head"><span class="tc-tag">Правило</span><h2>Умножение и деление — пара</h2></header>
+    <p>Умножение — это сложение одинаковых слагаемых: 6 × 4 = 6 + 6 + 6 + 6. Деление отвечает на обратный вопрос.</p>
+    <div class="tc-triad" aria-label="Связь умножения и деления">
+      <span class="tc-formula">6 × 4 = 24</span><span class="tc-formula">24 : 4 = 6</span><span class="tc-formula">24 : 6 = 4</span>
+    </div>
+  </section>
+  <section class="tc-card">
+    <header class="tc-head"><span class="tc-tag is-cards">Карточки</span><h2>Особые случаи — переверни</h2></header>
+    <div class="tc-flips">
+      <button class="tc-flip" type="button" aria-pressed="false"><span class="tc-flip-front">a × 1 = ?</span><span class="tc-flip-back">a — умножение на 1 не меняет число</span></button>
+      <button class="tc-flip" type="button" aria-pressed="false"><span class="tc-flip-front">a × 0 = ?</span><span class="tc-flip-back">0 — любое число, умноженное на ноль, равно нулю</span></button>
+      <button class="tc-flip" type="button" aria-pressed="false"><span class="tc-flip-front">0 : a = ?</span><span class="tc-flip-back">0 (если a ≠ 0)</span></button>
+      <button class="tc-flip" type="button" aria-pressed="false"><span class="tc-flip-front">a : 0 = ?</span><span class="tc-flip-back">Нельзя! На ноль делить нельзя</span></button>
+    </div>
+  </section>
+  <section class="tc-card tc-quiz" data-answer="b" data-explain="x — неизвестный множитель: x = 72 : 8 = 9." data-hint="неизвестный множитель = произведение : известный множитель.">
+    <header class="tc-head"><span class="tc-tag is-check">Проверь себя</span><h2>Реши: 8 × x = 72</h2></header>
+    <div class="tc-quiz-opts">
+      <button class="tc-quiz-opt" type="button" data-value="a">8</button>
+      <button class="tc-quiz-opt" type="button" data-value="b">9</button>
+      <button class="tc-quiz-opt" type="button" data-value="c">64</button>
+    </div>
+    <p class="tc-quiz-note" hidden></p>
+  </section>
+  <div class="remember"><h3>Запомни!</h3><p>Деление проверяют умножением: частное × делитель = делимое.</p></div>
+
+{% elif lesson.order == 2 %}
+  <section class="tc-card tc-card-rule">
+    <header class="tc-head"><span class="tc-tag">Правило</span><h2>Порядок действий</h2></header>
+    <div class="tc-order">
+      <span><b>1</b>Скобки ( )</span><span><b>2</b>× и : слева направо</span><span><b>3</b>+ и − слева направо</span>
+    </div>
+  </section>
+  <section class="tc-card">
+    <header class="tc-head"><span class="tc-tag is-example">Пример</span><h2>Вычислим 48 − (6 + 2) × 5 : 4</h2></header>
+    <ol class="tc-steps tc-steps-expr">
+      <li><span class="tc-expr">48 − <mark>(6 + 2)</mark> × 5 : 4</span><small>Сначала скобки: 6 + 2 = 8</small></li>
+      <li><span class="tc-expr">48 − <mark>8 × 5</mark> : 4</span><small>Умножение и деление — слева направо: 8 × 5 = 40</small></li>
+      <li><span class="tc-expr">48 − <mark>40 : 4</mark></span><small>Теперь деление: 40 : 4 = 10</small></li>
+      <li><span class="tc-expr"><mark>48 − 10</mark></span><small>Последним — вычитание: 48 − 10 = 38</small></li>
+      <li><span class="tc-expr">Ответ: <b>38</b></span></li>
+    </ol>
+  </section>
+  <section class="tc-card tc-quiz" data-answer="a" data-explain="Сначала 3 × 4 = 12, потом 20 − 12 = 8." data-hint="умножение выполняется раньше вычитания.">
+    <header class="tc-head"><span class="tc-tag is-check">Проверь себя</span><h2>Чему равно 20 − 3 × 4?</h2></header>
+    <div class="tc-quiz-opts">
+      <button class="tc-quiz-opt" type="button" data-value="a">8</button>
+      <button class="tc-quiz-opt" type="button" data-value="b">68</button>
+      <button class="tc-quiz-opt" type="button" data-value="c">17</button>
+    </div>
+    <p class="tc-quiz-note" hidden></p>
+  </section>
+  <div class="remember"><h3>Запомни!</h3><p>Над каждым действием можно подписать его номер — так не запутаешься в порядке.</p></div>
+
+{% else %}
+  <section class="tc-card tc-card-rule">
+    <header class="tc-head"><span class="tc-tag">Правило</span><h2>Деление с остатком</h2></header>
+    <p class="tc-formula">делимое = делитель × неполное частное + остаток</p>
+    <p>Остаток всегда <b>меньше делителя</b>. Если остаток 0 — число делится нацело.</p>
+  </section>
+  <section class="tc-card">
+    <header class="tc-head"><span class="tc-tag is-try">Попробуй сам</span><h2>Раздели конфеты поровну</h2></header>
+    <div data-widget="remainder" data-a="23" data-d="5"></div>
+  </section>
+  <section class="tc-card tc-quiz" data-answer="c" data-explain="7 × 5 = 35, 38 − 35 = 3. Значит, 38 : 7 = 5 (ост. 3)." data-hint="найди наибольшее число, кратное 7, не больше 38.">
+    <header class="tc-head"><span class="tc-tag is-check">Проверь себя</span><h2>Какой остаток при делении 38 на 7?</h2></header>
+    <div class="tc-quiz-opts">
+      <button class="tc-quiz-opt" type="button" data-value="a">5</button>
+      <button class="tc-quiz-opt" type="button" data-value="b">8</button>
+      <button class="tc-quiz-opt" type="button" data-value="c">3</button>
+    </div>
+    <p class="tc-quiz-note" hidden></p>
+  </section>
+  <div class="remember"><h3>Запомни!</h3><p>Если остаток получился больше делителя или равен ему — частное найдено неверно.</p></div>
+{% endif %}
+</div>
