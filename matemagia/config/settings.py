@@ -31,7 +31,7 @@ INSTALLED_APPS = [
     "progress",
     # Вторая половина проекта (раскомментируйте после добавления папок game и adaptive):
     "game",
-    # "adaptive",
+    "adaptive",
 ]
 
 MIDDLEWARE = [
@@ -108,6 +108,7 @@ GIGACHAT_AUTH_KEY = os.getenv("GIGACHAT_AUTH_KEY", "")
 GIGACHAT_SCOPE = os.getenv("GIGACHAT_SCOPE", "GIGACHAT_API_PERS")
 GIGACHAT_TIMEOUT = int(os.getenv("GIGACHAT_TIMEOUT", "10"))
 GIGACHAT_MODEL = os.getenv("GIGACHAT_MODEL", "GigaChat")
+GIGACHAT_CA_BUNDLE_FILE = os.getenv("GIGACHAT_CA_BUNDLE_FILE", "")
 
 LOGGING = {
     "version": 1,

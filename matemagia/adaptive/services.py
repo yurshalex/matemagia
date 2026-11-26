@@ -1,0 +1,214 @@
+"""Адаптивная генерация и резервная выдача заданий через Django ORM."""
+
+import json
+import logging
+import random
+
+from django.db import DatabaseError
+
+from core.results import ResultCode, ServiceResult
+from learning.models import Topic
+from progress.models import SolutionAttempt, UserProgress
+from tests.checker import AnswerChecker
+from tests.models import Task
+from .gigachat import GigaChatClient
+
+logger = logging.getLogger(__name__)
+
+
+class AdaptiveService:
+    def __init__(self, gigachat_client=None):
+        self.client = gigachat_client or GigaChatClient()
+
+    def determine_difficulty(self, user, topic_id):
+        """Идемпотентный пересчёт по группам из 5 попыток: >=4 выше, <=1 ниже."""
+        if not Topic.objects.filter(pk=topic_id).exists():
+            return ServiceResult.fail(ResultCode.NOT_FOUND, {"topic": "Тема не найдена"})
+        flags = list(
+            SolutionAttempt.objects.filter(user=user, task__topic_id=topic_id)
+            .order_by("created_at", "id").values_list("is_correct", flat=True)
+        )
+        difficulty = 1
+        for index in range(0, len(flags) // 5 * 5, 5):
+            passed = sum(bool(x) for x in flags[index:index + 5])
+            if passed >= 4:
+                difficulty = min(3, difficulty + 1)
+            elif passed <= 1:
+                difficulty = max(1, difficulty - 1)
+        current = UserProgress.objects.filter(user=user, topic_id=topic_id).first()
+        if current is not None and current.difficulty_level != difficulty:
+            current.difficulty_level = difficulty
+            current.save(update_fields=["difficulty_level"])
+        return ServiceResult.success(difficulty)
+
+    def build_generation_params(self, topic, difficulty, task_type):
+        return {
+            "topic_id": topic.pk,
+            "topic_title": topic.title,
+            "grade": 5,
+            "difficulty_level": difficulty,
+            "task_type": task_type,
+        }
+
+    @staticmethod
+    def _normalize_answer(kind, payload, answer):
+        """Проверяет соответствие с AnswerChecker, сериализует составные ответы."""
+        class _Candidate:
+            task_type = kind
+            content_payload = payload
+
+        if kind == "input":
+            AnswerChecker.normalize_number(answer)
+            return str(answer)
+        if kind == "choice":
+            options = payload.get("options")
+            if not isinstance(options, list) or len(options) < 2 or not all(isinstance(s, str) and s.strip() for s in options):
+                raise ValueError("Нужен массив вариантов ответа")
+            if len(set(options)) != len(options) or not isinstance(answer, str) or answer not in options:
+                raise ValueError("Правильный вариант отсутствует в списке")
+            return answer
+        if kind == "boolean":
+            if isinstance(answer, bool):
+                return "true" if answer else "false"
+            if isinstance(answer, str) and answer.strip().lower() in ("true", "false"):
+                return answer.strip().lower()
+            raise ValueError("Ожидается true/false")
+        if kind in ("ordering", "matching"):
+            parsed = json.loads(answer) if isinstance(answer, str) else answer
+            candidate = _Candidate()
+            AnswerChecker.normalize(candidate, parsed)
+            if kind == "ordering" and (not isinstance(payload.get("items"), list) or len(payload["items"]) < 2):
+                raise ValueError("Недостаточно элементов для упорядочивания")
+            if kind == "matching":
+                left, right = payload.get("left"), payload.get("right")
+                if (not isinstance(left, list) or not isinstance(right, list) or
+                        len(left) < 2 or len(left) != len(right) or
+                        len(set(left)) != len(left) or len(set(right)) != len(right)):
+                    raise ValueError("Некорректные элементы для сопоставления")
+                mapping = dict(parsed) if isinstance(parsed, list) else parsed
+                if len(set(mapping.values())) != len(right):
+                    raise ValueError("Соответствие должно быть взаимно однозначным")
+            return json.dumps(parsed, ensure_ascii=False)
+        raise ValueError("Неизвестный формат")
+
+    def validate_generated_task(self, data, params):
+        """Возвращает очищенный словарь полей Task, не сохраняя некорректный ответ."""
+        try:
+            if not isinstance(data, dict):
+                raise ValueError("Не JSON-объект")
+            kind = data["task_type"]
+            difficulty = data["difficulty_level"]
+            condition, explanation = data["condition"], data["explanation"]
+            payload = data.get("content_payload") or {}
+            if kind != params["task_type"] or kind not in Task.Type.values:
+                raise ValueError("Не соответствует формату запроса")
+            if type(difficulty) is not int or difficulty != params["difficulty_level"] or not 1 <= difficulty <= 3:
+                raise ValueError("Не соответствует сложности запроса")
+            if not isinstance(condition, str) or not condition.strip() or len(condition) > 4000:
+                raise ValueError("Отсутствует условие")
+            if not isinstance(explanation, str) or not explanation.strip():
+                raise ValueError("Отсутствует объяснение")
+
+            if not isinstance(payload, dict):
+                raise ValueError("Некорректный content_payload")
+
+            if kind == "input" and any(
+                phrase in condition.lower()
+                for phrase in (
+                    "запиши число",
+                    "запиши цифрами",
+                    "натуральным числом",
+                    "словами",
+                )
+            ):
+                raise ValueError("Словесная запись числа требует отдельной проверки")
+
+            answer = self._normalize_answer(kind, payload, data["correct_answer"])
+            return ServiceResult.success({
+                "topic_id": params["topic_id"],
+                "task_type": kind,
+                "difficulty_level": difficulty,
+                "condition": condition.strip(),
+                "content_payload": payload,
+                "correct_answer": answer,
+                "explanation": explanation.strip(),
+                "is_ai_generated": True,
+            })
+        except (KeyError, ValueError, TypeError, OverflowError, ZeroDivisionError, json.JSONDecodeError):
+            return ServiceResult.fail(ResultCode.AI_INVALID_RESPONSE, {"gigachat": "Некорректные поля задания"})
+
+    def generate_task(self, topic, task_type, difficulty):
+        params = self.build_generation_params(topic, difficulty, task_type)
+        attempts = 2 if task_type == "matching" else 1
+
+        for _ in range(attempts):
+            response = self.client.request_generation(params)
+            if not response.ok:
+                return response
+
+            checked = self.validate_generated_task(response.data, params)
+            if checked.ok:
+                break
+        else:
+            return checked
+
+        # Не сохраняем повторно одинаковые ИИ-задания.
+        duplicate = Task.objects.filter(
+            is_ai_generated=True,
+            topic=topic,
+            condition=checked.data["condition"],
+        ).exists()
+
+        if duplicate:
+            return ServiceResult.fail(
+                ResultCode.AI_INVALID_RESPONSE,
+                {"gigachat": "Такое ИИ-задание уже существует"},
+            )
+
+        try:
+            task = Task.objects.create(**checked.data)
+            return ServiceResult.success(task)
+        except DatabaseError:
+            logger.exception("Ошибка сохранения сгенерированного задания")
+            return ServiceResult.fail(ResultCode.INTERNAL_ERROR, {"task": "Ошибка сохранения задания"})
+
+    def get_fallback_task(self, topic_id=None, task_type=None, difficulty=None, exclude_ids=()):
+        """Приоритет: тема+формат+сложность -> тема+формат -> тема."""
+        base = Task.objects.filter(is_ai_generated=False).exclude(pk__in=exclude_ids)
+        if topic_id is not None:
+            base = base.filter(topic_id=topic_id)
+        levels = []
+        if task_type and difficulty is not None:
+            levels.append({"task_type": task_type, "difficulty_level": difficulty})
+        if task_type:
+            levels.append({"task_type": task_type})
+        elif difficulty is not None:
+            levels.append({"difficulty_level": difficulty})
+        levels.append({})
+        for filters in levels:
+            task = base.filter(**filters).order_by("?").first()
+            if task:
+                return ServiceResult.success(task)
+        return ServiceResult.fail(ResultCode.NO_TASKS_AVAILABLE, {"task": "Нет доступных заданий"})
+
+    def pick_next_task(self, user, topic_id=None, task_type=None, difficulty=None, exclude_ids=()):
+        """Интерфейс для TaskService.get_next_task(), возвращает объект Task."""
+        topic = Topic.objects.filter(pk=topic_id).first() if topic_id is not None else Topic.objects.order_by("?").first()
+        if topic is None:
+            return ServiceResult.fail(ResultCode.NO_TASKS_AVAILABLE, {"task": "Нет математических тем"})
+        if task_type and task_type not in Task.Type.values:
+            return ServiceResult.fail(ResultCode.VALIDATION_ERROR, {"type": "Неизвестный тип задания"})
+        if difficulty is not None and (type(difficulty) is not int or not 1 <= difficulty <= 3):
+            return ServiceResult.fail(ResultCode.VALIDATION_ERROR, {"difficulty": "Уровень должен быть от 1 до 3"})
+        if difficulty is None:
+            level = self.determine_difficulty(user, topic.pk)
+            if not level.ok:
+                return level
+            difficulty = level.data
+        kind = task_type or random.choice(Task.Type.values)
+        # Без ключа не делаем сетевых обращений: мгновенно переходим к подготовленным задачам.
+        if self.client.auth_key:
+            generated = self.generate_task(topic, kind, difficulty)
+            if generated.ok:
+                return generated
+        return self.get_fallback_task(topic.pk, task_type, difficulty, exclude_ids)
