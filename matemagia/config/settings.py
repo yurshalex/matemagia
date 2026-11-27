@@ -31,7 +31,7 @@ INSTALLED_APPS = [
     "progress",
     # Вторая половина проекта (раскомментируйте после добавления папок game и adaptive):
     "game",
-    # "adaptive",
+    "adaptive",
 ]
 
 MIDDLEWARE = [
@@ -108,6 +108,25 @@ GIGACHAT_AUTH_KEY = os.getenv("GIGACHAT_AUTH_KEY", "")
 GIGACHAT_SCOPE = os.getenv("GIGACHAT_SCOPE", "GIGACHAT_API_PERS")
 GIGACHAT_TIMEOUT = int(os.getenv("GIGACHAT_TIMEOUT", "10"))
 GIGACHAT_MODEL = os.getenv("GIGACHAT_MODEL", "GigaChat")
+
+# Путь к SSL-сертификату GigaChat.
+# Относительные пути отсчитываем от корня Django-проекта.
+_gigachat_ca_bundle = os.getenv("GIGACHAT_CA_BUNDLE_FILE", "").strip()
+
+if _gigachat_ca_bundle:
+    _gigachat_ca_path = Path(_gigachat_ca_bundle).expanduser()
+
+    if not _gigachat_ca_path.is_absolute():
+        _gigachat_ca_path = BASE_DIR / _gigachat_ca_path
+
+    GIGACHAT_CA_BUNDLE_FILE = str(_gigachat_ca_path.resolve())
+else:
+    GIGACHAT_CA_BUNDLE_FILE = ""
+
+GIGACHAT_CHAT_URL = os.getenv(
+    "GIGACHAT_CHAT_URL",
+    "https://api.giga.chat/v1/chat/completions",
+)
 
 LOGGING = {
     "version": 1,

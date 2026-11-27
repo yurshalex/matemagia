@@ -55,11 +55,10 @@ class TaskService:
     def get_next_task(self, user, topic_id=None, task_type=None, difficulty=None, exclude_ids=()):
         adaptive = self._service(self.adaptiveService, 'adaptive.services', 'AdaptiveService')
         if adaptive and hasattr(adaptive, "pick_next_task"):
-            result = adaptive.pick_next_task(user, topic_id, task_type, difficulty)
+            result = adaptive.pick_next_task(user, topic_id, task_type, difficulty, exclude_ids=exclude_ids)
             if result.ok and isinstance(result.data, Task) and result.data.pk not in exclude_ids:
                 task = result.data
-                if (topic_id is None or task.topic_id == topic_id) and (not task_type or task.task_type == task_type) and (difficulty is None or task.difficulty_level == difficulty):
-                    return ServiceResult.success(self.serialize_task(task))
+                return ServiceResult.success(self.serialize_task(task))
         qs = Task.objects.exclude(pk__in=exclude_ids)
         if topic_id is not None:
             qs = qs.filter(topic_id=topic_id)
