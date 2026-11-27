@@ -848,61 +848,85 @@ python manage.py runserver 0.0.0.0:8000
 
 ---
 
-## 7. Трассируемость требований
+## Трассируемость требований
 
-### 7.1. Группа 1. Управление учётной записью и личным кабинетом
+### Матрица трассируемости требований
 
-| Компонент проектирования | ФТ 1.1 Регистрация | ФТ 1.2 Авторизация | ФТ 1.3 Основные результаты в личном кабинете |
+#### Группа 1. Управление учётной записью и личным кабинетом
+
+| Компонент документа проектирования | ФТ 1.1 Регистрация | ФТ 1.2 Авторизация | ФТ 1.3 Основные результаты в личном кабинете |
 | :--- | :--- | :--- | :--- |
 | Архитектура | Приложение `users` создаёт учётную запись | `users` проверяет данные и управляет сессией | `users` получает показатели из `progress` и `game` |
-| Проект интерфейса | Форма регистрации `users/register.html` | Форма входа `users/auth_login.html` | Страница `progress/profile_stats.html` |
+| Проект интерфейса | Форма регистрации `RegistrationForm` в `users/register.html`; вкладка `tab-register`, ссылка `link-register` на экране авторизации | Форма входа `users/auth_login.html`: поля `id_username`, `id_password`, кнопка `btn-submit-login` | Форма личного кабинета `progress/profile_stats.html` с блоком `stats-grid`; кнопка `btn-ranks-achievements` для просмотра рангов и достижений |
 | Структура данных | `users_user`: `username`, `password`, `first_name`, `grade` | `users_user`, сессия Django | `users_user.current_rank`, `progress_userprogress`, `game_userachievement` |
 | Алгоритмы | — | — | Алгоритм расчёта успеваемости |
-| Проект подсистем | `AuthViews.register_view`, `AuthService.register` | `AuthViews.login_view`, `AuthService.login` | `AuthViews.profile_view`, `ProgressService.get_user_stats` |
-| Структура кода | `users/forms.py`, `models.py`, `views.py`, `services.py` | `users/views.py`, `users/services.py` | `users/views.py`, `progress/services.py`, `game/services.py` |
+| API (метод HTTP и адрес) | `POST /register/` — регистрация | `POST /login/` — вход; `POST /logout/` — выход | `GET /profile/` — личный кабинет |
+| Проект подсистем | `AuthViews.register_view()`, `AuthService.register()` | `AuthViews.login_view()`, `AuthService.login()` | `AuthViews.profile_view()`, `ProgressService.get_user_stats()` |
+| Структура кода | `users/forms.py`, `users/models.py`, `users/views.py`, `users/services.py` | `users/views.py`, `users/services.py` | `users/views.py`, `progress/services.py`, `game/services.py` |
+| Проект сборки и установки | Создание таблиц миграциями; проверка регистрации тестового пользователя | Настройка Django Authentication и сессий | Проверка личного кабинета после решения задания |
 
-### 7.2. Группа 2. Изучение математических тем
+#### Группа 2. Изучение математических тем
 
-| Компонент проектирования | ФТ 2.1 Список тем | ФТ 2.2 Выбор темы | ФТ 2.3 Теоретические материалы | ФТ 2.4 Повторное прохождение заданий |
+| Компонент документа проектирования | ФТ 2.1 Список тем | ФТ 2.2 Выбор темы | ФТ 2.3 Теоретические материалы | ФТ 2.4 Повторное прохождение заданий |
 | :--- | :--- | :--- | :--- | :--- |
-| Архитектура | `learning` предоставляет каталог тем | `learning` открывает выбранную тему | `learning` получает материалы урока | `tests` выдаёт задания темы, `progress` сохраняет попытки |
-| Проект интерфейса | Каталог `learning/topic_catalog.html` | Карточка темы `topic-card` | Страница `learning/theory_view.html` | Переход из темы или блока слабых мест к тренажёру |
+| Архитектура | `learning` предоставляет каталог тем | `learning` открывает выбранную тему | `learning` получает материалы урока | `tests` выдаёт новые задания выбранной темы, `progress` сохраняет попытки |
+| Проект интерфейса | Форма каталога `learning/topic_catalog.html`: карточки `topic-card`, фильтры `filter-btn`; кнопка `btn-select-topic` на главной странице | Форма каталога `learning/topic_catalog.html`; интерактивная карточка темы `topic-card` открывает сведения о теме | Форма теории `learning/theory_view.html`; элементы `sidebar-lesson-item`, кнопки `btn-next-lesson` и `btn-go-to-tasks` | Форма тренажёра `tests/task_trainer.html`, кнопка `btn-retry-task`; переход к заданиям через `btn-go-to-tasks` |
 | Структура данных | `learning_topic`: `id`, `title`, `order` | `learning_topic.id` | `learning_lesson`: `topic_id`, `content`, `order` | `tasks_task.topic_id`, `progress_solutionattempt` |
 | Алгоритмы | — | — | — | Алгоритм выбора следующего задания |
-| Проект подсистем | `LearningViews.topic_list_view`, `LearningService.get_topics_with_status` | `LearningViews.topic_detail_view`, `LearningService.get_topic` | `LearningViews.theory_view`, `LearningService.get_lesson` | `TaskService.get_next_task`, `ProgressService.record_attempt` |
+| API (метод HTTP и адрес) | `GET /topics/` — каталог тем | `GET /topics/<id>/` — выбранная тема | `GET /theory/<id>/` — урок | `GET /tasks/` — тренажёр; `GET /tasks/next/` — следующее задание |
+| Проект подсистем | `LearningViews.topic_list_view()`, `LearningService.get_topics_with_status()` | `LearningViews.topic_detail_view()`, `LearningService.get_topic()` | `LearningViews.theory_view()`, `LearningService.get_lesson()` | `TaskService.get_next_task()`, `ProgressService.record_attempt()` |
+| Структура кода | `learning/models.py`, `learning/views.py`, `learning/services.py` | `learning/urls.py`, `learning/views.py` | `learning/models.py`, `learning/services.py`, `templates/learning/` | `tests/services.py`, `progress/services.py` |
+| Проект сборки и установки | Загрузка начальных тем через `loaddata initial_data.json` | Проверка выбора темы после установки | Загрузка уроков из `initial_data.json`; проверка просмотра теории | Подготовленные задания из `initial_data.json`; проверка прохождения заданий |
 
-### 7.3. Группа 3. Выполнение и проверка математических заданий
+#### Группа 3. Выполнение и проверка математических заданий
 
-| Компонент проектирования | ФТ 3.1 Выбор типа | ФТ 3.2 Условие | ФТ 3.3 Приём ответа | ФТ 3.4 Проверка | ФТ 3.5 Результат | ФТ 3.6 Объяснение | ФТ 3.7 Резервные задания |
+| Компонент документа проектирования | ФТ 3.1 Выбор типа задания | ФТ 3.2 Условие задания | ФТ 3.3 Приём ответа | ФТ 3.4 Проверка решения | ФТ 3.5 Результат проверки | ФТ 3.6 Объяснение или ошибка | ФТ 3.7 Резервные задания из БД |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| Архитектура | `tests` подбирает формат | `tests` выводит условие | `tests` принимает ответ | `tests` вызывает проверку | `tests` возвращает результат | `tests` показывает объяснение | `adaptive` выбирает из SQLite при сбое GigaChat |
-| Проект интерфейса | `tests/task_list.html` | `tests/task_trainer.html` | `answer-option-input` | Отправка из тренажёра | `feedback-panel` | `feedback-panel`, `btn-show-solution` | Отображается в обычном тренажёре |
-| Структура данных | `tasks_task.task_type` | `tasks_task.condition` | `progress_solutionattempt.user_answer` | `tasks_task.correct_answer` | `is_correct` | `tasks_task.explanation` | `tasks_task.is_ai_generated = FALSE` |
-| Проект подсистем | `TaskViews.task_list_view`, `TaskService.get_next_task` | `TaskViews.task_detail_view`, `TaskService.get_task` | `TaskViews.check_answer_view`, `validate_answer_format` | `AnswerChecker.check`, `TaskService.check_answer` | `TaskViews.check_answer_view` | `AnswerChecker.build_explanation` | `AdaptiveService.get_fallback_task` |
+| Архитектура | `tests` подбирает формат задания | `tests` выводит условие | `tests` принимает ответ | `tests` вызывает проверку ответа | `tests` возвращает результат | `tests` показывает объяснение | `adaptive` выбирает задание из SQLite при ошибке GigaChat |
+| Проект интерфейса | Форма выбора заданий `tests/task_list.html`; выбор формата по параметру `task_type` (отдельная кнопка формата в проекте интерфейса не обозначена) | Форма тренажёра `tests/task_trainer.html`: заголовок `task-header`, условие задания и варианты `option-item` | Форма тренажёра `tests/task_trainer.html`: варианты ответа `answer-option-input` (`option-item`) | Форма тренажёра `tests/task_trainer.html`: отправка выбранного ответа из `answer-option-input` на проверку; отдельная кнопка проверки в интерфейсе не обозначена | Форма тренажёра `tests/task_trainer.html`: блок обратной связи `feedback-panel` | Форма тренажёра `tests/task_trainer.html`: блок `feedback-panel` и кнопка `btn-show-solution` | Форма тренажёра `tests/task_trainer.html`: подготовленное задание показывается в обычной форме; специальной кнопки резервного режима нет |
+| Структура данных | `tasks_task.task_type`, `topic_id` | `tasks_task.condition`, `content_payload` | `progress_solutionattempt.user_answer` | `tasks_task.correct_answer`, `progress_solutionattempt.is_correct` | `progress_solutionattempt.is_correct` | `tasks_task.explanation` | `tasks_task.is_ai_generated = FALSE` |
+| Алгоритмы | Алгоритм выбора следующего задания | — | — | — | — | — | Алгоритмы генерации заданий через GigaChat и выбора следующего задания |
+| API (метод HTTP и адрес) | `GET /tasks/` (параметры `topic`, `type`) — выбор формата | `GET /tasks/<id>/` — получение страницы задания | `POST /tasks/<int:task_id>/check/` — передача ответа | `POST /tasks/<int:task_id>/check/` — проверка ответа | `POST /tasks/<int:task_id>/check/` — JSON с результатом | `POST /tasks/<int:task_id>/check/` — результат и объяснение | `GET /tasks/next/` — получение задания, включая резервный выбор |
+| Проект подсистем | `TaskViews.task_list_view()`, `TaskService.get_next_task()` | `TaskViews.task_detail_view()`, `TaskService.get_task()` | `TaskViews.check_answer_view()`, `TaskService.validate_answer_format()` | `AnswerChecker.check()`, `TaskService.check_answer()` | `TaskViews.check_answer_view()` | `AnswerChecker.build_explanation()` | `AdaptiveService.get_fallback_task()` |
+| Структура кода | `tests/views.py`, `tests/services.py` | `tests/models.py`, `templates/tests/task_trainer.html` | `tests/forms.py`, `tests/views.py` | `tests/checker.py`, `tests/services.py` | `tests/views.py`, `templates/tests/result.html` | `tests/checker.py`, `templates/tests/` | `adaptive/services.py`, `adaptive/gigachat.py`, `tests/models.py` |
+| Проект сборки и установки | Загрузка подготовленных заданий; проверка тренажёра | Начальные задания из `initial_data.json` | Проверка выполнения задания после установки | Проверка правильного и неправильного ответа | Проверка отображения результата и начисления опыта | Проверка обратной связи после решения задания | Отдельная проверка резервного режима без `GIGACHAT_AUTH_KEY` |
 
-### 7.4. Группа 4. Учёт результатов и анализ успеваемости
+#### Группа 4. Учёт результатов и анализ успеваемости
 
-| Компонент проектирования | ФТ 4.1 История решений | ФТ 4.2 Показатели успеваемости | ФТ 4.3 Общий прогресс | ФТ 4.4 Прогресс по теме | ФТ 4.5 Проблемные темы | ФТ 4.6 Слабые места |
+| Компонент документа проектирования | ФТ 4.1 История решений | ФТ 4.2 Показатели успеваемости | ФТ 4.3 Общий прогресс | ФТ 4.4 Прогресс по теме | ФТ 4.5 Проблемные темы | ФТ 4.6 Слабые места |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| Архитектура | `progress` сохраняет попытки | `progress` агрегирует результаты | `progress` выдаёт общие показатели | `progress` хранит показатели по темам | `progress` выявляет слабые темы | `progress` выдаёт задания для повторения |
-| Проект интерфейса | `recent-attempts-section` | Карточки `stats-grid` | `progress.html`, `profile_stats.html` | Индикаторы по темам | `weak-spots-section` | `progress/weak_topics.html` |
-| Структура данных | `progress_solutionattempt` | `progress_userprogress` | `progress_userprogress` | `user_id + topic_id` | `error_rate` | Последние попытки из `progress_solutionattempt` |
-| Алгоритмы | — | Алгоритм расчёта успеваемости | Алгоритм расчёта успеваемости | Алгоритм расчёта успеваемости | Алгоритм выявления слабых тем | Алгоритм работы над ошибками |
+| Архитектура | Приложение `progress` сохраняет историю ответов, полученных от `tests` | `progress` вычисляет показатели успеваемости, которые приложение `users` отображает в личном кабинете | `progress` агрегирует результаты пользователя по всем математическим темам | `progress` хранит статистику отдельных тем; `learning` определяет статус прохождения каждой темы | `progress` анализирует долю неправильных ответов и выявляет проблемные темы | `progress` определяет задания с последним неправильным ответом для повторного решения |
+| Проект интерфейса | Страница истории `progress/history.html`; блок последних попыток `recent-attempts-section` в личном кабинете | Личный кабинет `progress/profile_stats.html`; карточки успеваемости `stats-grid` с количеством решений и процентом правильных ответов | Страница общей статистики `progress/progress.html`; сводные показатели `stats-grid` и диаграмма точности ответов `score-ring` | Каталог `learning/topic_catalog.html`: индикатор `topic-progress-fill` и статус темы; страница `progress/progress.html`: блок «Прогресс по темам» | Личный кабинет `progress/profile_stats.html`: блок `weak-spots-section` | Страница `progress/weak_topics.html`; ссылка `link-fix-weak-spots` для перехода к работе над ошибками |
+| Структура данных | `progress_solutionattempt`: `user_id`, `task_id`, `user_answer`, `is_correct`, `created_at` | `progress_userprogress`: `tasks_solved`, `tasks_correct`, `error_rate` | Совокупность записей `progress_userprogress` пользователя: количество решённых и правильных заданий по всем темам | `progress_userprogress`: `user_id`, `topic_id`, `tasks_solved`, `tasks_correct`; связь с `learning_topic` | `progress_userprogress.error_rate`, `tasks_solved`, `tasks_correct` | `progress_solutionattempt`: история ответов пользователя и признак `is_correct` |
+| Алгоритмы | Сохранение каждой попытки решения с указанием правильности ответа и времени | Расчёт количества решённых, правильных и неправильных заданий; определение процента правильных ответов | Суммирование результатов по всем темам пользователя и расчёт общей доли правильных ответов | Подсчёт результатов по каждой теме; вычисление процента правильных ответов и определение статуса темы по количеству верно решённых заданий | Алгоритм выявления слабых тем: менее 60% правильных ответов при не менее чем 3 попытках | Алгоритм работы над ошибками: выбор заданий, последняя попытка решения которых была неправильной |
+| API (метод HTTP и адрес) | `POST /tasks/<int:task_id>/check/` — обработка ответа и сохранение попытки; `GET /progress/history/?page=N` — просмотр истории решений | `GET /profile/` — отображение показателей успеваемости в личном кабинете | `GET /progress/` — отображение общей статистики пользователя по всем темам | `GET /topics/` — отображение статусов тем, количества верно решённых заданий и индикаторов прогресса | `GET /progress/errors/` — отображение списка проблемных тем | `GET /progress/errors/` — отображение заданий для работы над ошибками |
+| Проект подсистем | `ProgressService.record_attempt()`, `ProgressService.get_history()`, `history_view()` | `ProgressService.get_user_stats()`, `profile_view()` | `ProgressService.get_user_stats()`, `progress_view()` | `ProgressService.get_topic_progress()`, `LearningService.get_topics_with_status()`, `topic_list_view()` | `ProgressService.get_weak_topics()`, `error_analysis_view()` | `ProgressService.get_error_tasks()`, `error_analysis_view()` |
+| Структура кода | `progress/models.py`, `progress/services.py`, `progress/views.py` | `progress/services.py`, `users/views.py`, `templates/progress/profile_stats.html` | `progress/services.py`, `progress/views.py`, `templates/progress/progress.html` | `progress/models.py`, `progress/services.py`, `learning/services.py`, `learning/views.py` | `progress/services.py`, `progress/views.py` | `progress/services.py`, `progress/views.py`, `templates/progress/weak_topics.html` |
+| Проект сборки и установки | Создание таблицы истории попыток миграциями; проверка сохранения решений | Проверка отображения количества решений и процента правильных ответов в личном кабинете | Проверка расчёта общей статистики после решения заданий из разных тем | Создание таблицы прогресса по темам; проверка изменения индикатора и статуса темы после правильных ответов | Проверка обнаружения темы с низким процентом правильных ответов | Проверка появления задания в списке ошибок и его исключения после правильного повторного решения |
 
-### 7.5. Группа 5. Адаптивное и интеллектуальное обучение
+#### Группа 5. Адаптивное и интеллектуальное обучение
 
-| Компонент проектирования | ФТ 5.1 Адаптация сложности | ФТ 5.2 Генерация заданий через GigaChat |
+| Компонент документа проектирования | ФТ 5.1 Адаптация сложности | ФТ 5.2 Генерация заданий через GigaChat |
 | :--- | :--- | :--- |
 | Архитектура | `adaptive` анализирует историю из `progress` | `adaptive` вызывает внешний API через `GigaChatClient` |
-| Структура данных | История `progress_solutionattempt`, `difficulty_level` | `tasks_task`: `task_type`, `condition`, `content_payload`, `is_ai_generated` |
+| Проект интерфейса | Форма тренажёра `tests/task_trainer.html`: задания выдаются с рассчитанной сложностью; отдельной кнопки изменения сложности нет | Форма теории `learning/theory_view.html`: кнопка `btn-go-to-tasks` ведёт в тренажёр `tests/task_trainer.html`, где отображается сгенерированное задание |
+| Структура данных | История `progress_solutionattempt`; параметр сложности `difficulty_level` | `tasks_task`: `task_type`, `condition`, `content_payload`, `is_ai_generated` |
 | Алгоритмы | Алгоритм адаптации сложности | Алгоритм генерации заданий через GigaChat |
-| Проект подсистем | `AdaptiveService.determine_difficulty`, `pick_next_task` | `AdaptiveService.generate_task`, `validate_generated_task`; `GigaChatClient` |
+| API (метод HTTP и адрес) | `GET /tasks/next/` — выдача следующего задания с адаптацией сложности | `GET /tasks/next/` — запрос задания; сервер выполняет `POST /api/v2/oauth` и `POST /v1/chat/completions` к внешнему GigaChat API |
+| Проект подсистем | `AdaptiveService.determine_difficulty()`, `pick_next_task()` | `AdaptiveService.generate_task()`, `validate_generated_task()`; `GigaChatClient.request_generation()` |
+| Структура кода | `adaptive/services.py`, `progress/services.py` | `adaptive/gigachat.py`, `adaptive/services.py` |
+| Проект сборки и установки | Настройки адаптации в `config/settings.py` | `requests`, `python-dotenv` в `requirements.txt`; `GIGACHAT_AUTH_KEY` в `.env` |
+| Внешнее взаимодействие | Расчёт сложности выполняется внутри приложения без передачи данных пользователя в GigaChat | Авторизация через OAuth и `POST /v1/chat/completions`; резервная выдача при ошибках |
 
-### 7.6. Группа 6. Игровая система и достижения
+#### Группа 6. Игровая система и достижения
 
-| Компонент проектирования | ФТ 6.1 Режим «Испытание» | ФТ 6.2 Начисление опыта | ФТ 6.3 Изменение ранга | ФТ 6.4 Достижения и ранг |
+| Компонент документа проектирования | ФТ 6.1 Режим «Испытание» | ФТ 6.2 Начисление опыта | ФТ 6.3 Изменение ранга | ФТ 6.4 Достижения и ранг |
 | :--- | :--- | :--- | :--- | :--- |
-| Архитектура | `game` управляет испытанием | `game` начисляет XP | `game` обновляет ранг | `game` учитывает достижения |
-| Проект интерфейса | `game/challenge_game.html` | Шкала `rank-progress-bar` | `widget-current-rank` | `game/achievements_list.html` |
-| Структура данных | `request.session["challenge"]` | `users_user.current_xp`, `xp_earned` | `users_user.current_rank` | `game_achievement`, `game_userachievement` |
-| Проект подсистем | `ChallengeService` | `RewardService.calculate_xp`, `award_xp` | `RewardService.update_rank`, `get_rank_info` | `RewardService.check_achievements`, `get_achievements` |
+| Архитектура | `game` управляет испытанием, `tests` выдаёт задания | `game` начисляет XP после проверки | `game` обновляет ранг пользователя | `game` учитывает и выдаёт достижения |
+| Проект интерфейса | Форма испытания `game/challenge_game.html`: список тем `challenge-topic-select` и кнопка `btn-start-challenge` | Форма тренажёра `tests/task_trainer.html`: выполнение задания через `answer-option-input`; начисленный опыт отображается шкалой `rank-progress-bar` в `dashboard_main.html` | Главная форма `dashboard_main.html`: карточка `widget-current-rank`; кнопка `btn-ranks-achievements` на форме профиля | Форма достижений `game/achievements_list.html`: карточки `achievement-card`; кнопка `btn-ranks-achievements` в личном кабинете |
+| Структура данных | `request.session["challenge"]` | `users_user.current_xp`, `progress_solutionattempt.xp_earned` | `users_user.current_rank` | `game_achievement`, `game_userachievement` |
+| Алгоритмы | — | Алгоритм начисления опыта и рангов | Алгоритм начисления опыта и рангов | Алгоритм начисления опыта и рангов (проверка условий достижений) |
+| API (метод HTTP и адрес) | `POST /game/start/` — запуск; `GET /game/` — просмотр задания; `POST /game/` — ответ в испытании | `POST /tasks/<int:task_id>/check/` или `POST /game/` — результат решения и начисление XP | `GET /profile/`, `GET /achievements/` — отображение ранга | `GET /achievements/` — перечень достижений |
+| Проект подсистем | `ChallengeService.start_challenge()`, `submit_answer()`, `finish_challenge()` | `RewardService.calculate_xp()`, `award_xp` | `RewardService.update_rank()`, `get_rank_info` | `RewardService.check_achievements()`, `get_achievements` |
+| Структура кода | `game/views.py`, `game/services.py` | `game/services.py`, `progress/models.py` | `game/services.py`, `users/models.py` | `game/models.py`, `game/services.py` |
+| Проект сборки и установки | Проверка запуска и прохождения режима «Испытание» | Проверка начисления опыта после решения задания | Проверка ранга в личном кабинете | Загрузка справочника достижений из `initial_data.json` |
